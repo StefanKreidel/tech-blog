@@ -163,7 +163,7 @@
 }
 
 .dark-mode {
-  .videos {
+  .section-author {
     background: #0f151b;
 
     .section__info::after {
@@ -195,6 +195,7 @@
 /* Section Author */
 .section-author {
   margin-bottom: 170px;
+  background: var(--dark);
 
   @media only screen and (max-width: $desktop) {
     margin-bottom: 100px;
@@ -217,7 +218,7 @@
   width: 50%;
   margin-right: 48px;
   border-radius: 8px;
-  background: var(--background-alt-color);
+  background: #000;
 
   &.two-author-images {
     margin-right: 160px;
@@ -227,7 +228,7 @@
     position: absolute;
     border-radius: 8px;
     object-fit: cover;
-    background: var(--background-alt-color);
+    background: #000;
   }
 
   .author__big__image {
@@ -310,13 +311,14 @@
   .section-author__title {
     margin-bottom: 20px;
     font-size: 52px;
+    color: var(--white);
   }
 
   .section-author__description {
     margin-bottom: 32px;
     max-width: 500px;
     font-size: 16px;
-    color: var(--text-alt-color);
+    color: var(--gray);
   }
 
   @media only screen and (max-width: $wide) {

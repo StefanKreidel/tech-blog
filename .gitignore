@@ -6,3 +6,5 @@ _site/
 # media should not be hosted on github
 docs/images
 
+# node
+**/node_modules

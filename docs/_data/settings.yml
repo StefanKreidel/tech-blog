@@ -1,8 +1,8 @@
 #-------------------------------
 # Site Settings
-title: Mria
+title: TITLE
 logo: # You can add own logo. For example '/images/logo.png'.
-description: Mria is a multipurpose blog theme for Jekyll
+description: TITLE discusses all things software engineering
 color_scheme: auto # You can choose three modes auto, light, and dark. By default, the auto mode is set, which means the user can choose the light or dark mode themself.
 
 
@@ -16,47 +16,45 @@ menu__settings:
       url: '/blog/'
     - title: 'Authors'
       url: '/authors/'
-    - title: 'Videos'
-      url: '/videos/'
+    # - title: 'Videos'
+    #   url: '/videos/'
     - title: 'Pages'
       submenu:
       - url: '/about/'
         title: 'About'
       - url: '/contact/'
         title: 'Contact'
-      - url: '/elements/'
-        title: 'Elements'
 
 
 #-------------------------------
 # Hero Settings
 hero:
   enable: true
-  hero__title: Thoughts, stories and ideas.
-  hero__description: Don’t limit yourself. Many people limit themselves to what they think they can do. You can go as far as your mind lets you. What you believe, remember, you can achieve.
+  hero__title: Code snippets, patterns and best-practices.
+  hero__description: "Explaining complicated things in a lightweight and easy to grasp way is anything but simple. Join me in my journey to yet another tech-blog with one twist: lots of animation!"
   hero__image: # You can add hero image. For example '/images/06.jpg'
 
 
 #-------------------------------
 # Author Global Settings
 author:
-  author__name: Alena Curtis
-  author__bio: I’m a published content creator, brand copywriter, photographer, and social media content creator and manager. I help brands connect with their customers by developing engaging content that entertains, educates, and offers value to their audience.
-  author__avatar: /images/01-1.jpg
+  author__name: Stefan Kreidel
+  author__bio: I'm a software engineer and architect eager to understand the inner workings of tools and frameworks I use everyday. I write this blog to document each learning for myself, to teach myself how to break down difficult to grasp topics and to give you an alternative to doing hour-long research yourself.
+  author__avatar: https://i.imgur.com/toRzKMAm.jpg
 
 
 #-------------------------------
 # Blog Section Settings
 blog__settings:
   enable: true
-  blog__title: Latest Posts
+  blog__title: Latest Post
   blog__description:
 
 
 #-------------------------------
 # Videos Section Settings
 videos__settings:
-  enable: true
+  enable: false
   videos__title: Latest Videos
   videos__description:
 
@@ -64,7 +62,7 @@ videos__settings:
 #-------------------------------
 # Tag Section Settings
 tag__settings:
-  enable: true
+  enable: false
   tag: travel # To display the tag section, specify your favorite tag.
 
 
@@ -72,20 +70,20 @@ tag__settings:
 # Author Section Settings
 author__section:
   enable: true
-  author__section__title: Hello, my name is Alena. I’m reviewer and content creator.
-  author__section__description: I’m a published content creator, brand copywriter, photographer, and social media content creator and manager. I help brands connect with their customers by developing engaging content that entertains, educates, and offers value to their audience.
+  author__section__title: Hello, my name is Stefan. I am a software architect with a passion for pragmatic and effective solutions.
+  author__section__description: I'm a software engineer and architect eager to understand the inner workings of tools and frameworks I use everyday. I write this blog to document each learning for myself, to teach myself how to break down difficult to grasp topics and to give you an alternative to doing hour-long research yourself.
   aurhor__section__button__text: More About Me
   aurhor__section__button__link: /about
-  author__section__big__image: /images/100.jpg
-  author__section__small__image: /images/101.jpg
+  author__section__big__image: https://i.imgur.com/6LAn48D.jpg
+  author__section__small__image:
 
 
 #-------------------------------
 # Newsletter Settings
 mailchimp__settings:
-  enable: true
+  enable: false
   mailchimp__title: Get interesting news
-  mailchimp__description: Subscribe to our newsletter and we’ll send you the emails of latest posts.
+  mailchimp__description: Subscribe to our newsletter and we'll send you the emails of latest posts.
   mailchimp__identifier: frnla.us6.list-manage.com/subscribe/post?u=6314d69a3f315af7ce3fb00a0&amp;id=3038727cc3 # Add your MailChimp form identifier. For example - frnla.us6.list-manage.com/subscribe/post?u=6314d69a3f315af7ce3fb00a0&amp;id=3038727cc3
   mailchimp__input__text: Your email address
   mailchimp__button__text: Subscribe
@@ -94,16 +92,13 @@ mailchimp__settings:
 
 #-------------------------------
 # Footer Settings
-footer__description: Don’t limit yourself. Many people limit themselves to what they think they can do. You can go as far as your mind lets you. What you believe, remember, you can achieve.
+footer__description: "Explaining complicated things in a lightweight and easy to grasp way is anything but simple. Join me in my journey to yet another tech-blog with one twist: lots of animation!"
 
 
 # Social Links
 social:
-- {icon: "twitter", link: "https://twitter.com"}
-- {icon: "facebook", link: "https://facebook.com"}
-- {icon: "codepen", link: "https://codepen.io"}
-- {icon: "pinterest", link: "https://pinterest.com"}
-- {icon: "vimeo", link: "https://vimeo.com"}
+- {icon: "github", link: "https://github.com/StefanKreidel"}
+- {icon: "linkedin", link: "https://www.linkedin.com/in/stefan-kreidel-838b87169/"}
 
 # Example of adding a new link to the footer - {icon: "instagram", link: "https://instagram.com"}
 # Other icons can be found at https://ionicons.com/v4/
@@ -118,8 +113,6 @@ footer__menu__settings:
       url: '/about/'
     - title: 'Contact'
       url: '/contact/'
-    - title: 'Elements'
-      url: '/elements/'
 
 
 #-------------------------------

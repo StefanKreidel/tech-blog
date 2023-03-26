@@ -17,7 +17,7 @@
           <div class="col col-3 col-d-6 col-m-12">
             <a href="{{ site.baseurl }}/tags#{{ this_word | cgi_escape }}" class="tag-image">
               <span class="tag-name">{{ this_word }}</span>
-              <img class="lazy" {% for post in site.tags[this_word] %}{% if forloop.index==1 and post.image %} data-src="{{site.baseurl}}{{post.image}}" alt="post.title" {% endif %}{% endfor %}>
+              <img class="lazy" {% for post in site.tags[this_word] %}{% if forloop.index==1 and post.image %} data-src="{{post.image}}" alt="post.title" {% endif %}{% endfor %}>
             </a>
           </div>
           {% endunless %}

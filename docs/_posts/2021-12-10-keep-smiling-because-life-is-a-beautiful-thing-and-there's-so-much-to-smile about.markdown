@@ -3,7 +3,7 @@ layout: post
 title:  Keep smiling, because life is a beautiful thing and there's so much to smile about
 description:
 date:   2021-09-10 15:01:35 +0300
-author: nolan
+author: stefan
 image:  '/images/17.jpg'
 tags:   [travel, oregon]
 tags_color: '#477690'

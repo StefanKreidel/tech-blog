@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", function() {
   SimpleJekyllSearch({
     searchInput: document.getElementById("js-search-input"),
     resultsContainer: document.getElementById("js-results-container"),
-    json: "/search.json",
+    json: "/tech-blog/search.json",
     searchResultTemplate: '<a class="search-results__item" href="{url}"><div class="search-results__image"><img src="{image}" alt="{title}"></div> <div class="search-results__content"><time class="search-results__date" datetime="{date}">{date}</time><div class="search-results__title">{title}</div></div></a>',
     noResultsText: '<h4 class="no-results">No results found...</h4>'
   });

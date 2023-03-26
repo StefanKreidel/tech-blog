@@ -17,10 +17,10 @@ title: Authors
         {% assign post_count = site.posts | where:"author", author.username %}
         <div class="col col-4 col-d-6 col-t-12">
           <div class="authors__info">
-            <a class="authors__image" href="{{ author.url }}"><img class="lazy" data-src="{{ author.image }}" alt="{{ author.name }}"></a>
-            <h2 class="authors__name"><a class="authors__link" href="{{ author.url }}">{{ author.name }}</a></h2>
+            <a class="authors__image" href="{{ author.url | prepend: site.baseurl }}"><img class="lazy" data-src="{{ author.image }}" alt="{{ author.name }}"></a>
+            <h2 class="authors__name"><a class="authors__link" href="{{ author.url | prepend: site.baseurl }}">{{ author.name }}</a></h2>
             <div class="authors__posts__count">{{ post_count.size }} {% if post_count.size < 2 %}Post{% else %}Posts{% endif %}</div>
-            <p class="authors__description">{{ author.content }}</p>
+            <p class="authors__description">{{ author.summary }}</p>
           </div>
         </div>
         {% endfor %}

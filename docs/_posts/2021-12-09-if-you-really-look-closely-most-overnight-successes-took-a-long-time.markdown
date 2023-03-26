@@ -4,6 +4,7 @@ title:  If you really look closely, most overnight successes took a long time
 date:   2021-09-09 15:01:35 +0300
 author: alena
 image:  '/images/18.jpg'
+featured: true
 tags:   [travel, california]
 tags_color: '#814628'
 ---

@@ -34,7 +34,7 @@
             
                   {% if post.image %}
                   <a href="{{ post.url | prepend: site.baseurl }}" class="article__image" aria-hidden="true" tabindex="-1">
-                    <img class="lazy" data-src="{{site.baseurl}}{{post.image}}" alt="{{post.title}}">
+                    <img class="lazy" data-src="{{post.image}}" alt="{{post.title}}">
                   </a>
                   {% endif %}
             
