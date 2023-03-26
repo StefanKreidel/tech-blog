@@ -2,3 +2,7 @@ _site/
 .sass-cache/
 .jekyll-cache/
 .jekyll-metadata
+
+# media should not be hosted on github
+docs/images
+
