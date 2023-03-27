@@ -3,7 +3,7 @@ layout: post
 title:  The first post I ever wrote!
 date:   2023-03-18 09:58:46 +0100
 author: stefan
-image:  'https://i.imgur.com/LugHb0a.jpg'
+image:  'https://i.imgur.com/hTMh39f.jpg'
 featured: true
 tags:   [tech]
 tags_color: '#a96c27'
