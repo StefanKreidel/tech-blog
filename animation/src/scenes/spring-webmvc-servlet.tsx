@@ -4,21 +4,21 @@ import {createRef, useScene} from '@motion-canvas/core/lib/utils';
 import {all, waitFor} from '@motion-canvas/core/lib/flow';
 import { Vector2 } from '@motion-canvas/core/lib/types';
 import "@motion-canvas/core/lib/types/Color"
+import { createSignal } from '@motion-canvas/core/lib/signals';
 
 export default makeScene2D(function* (view) {
-  const shortTransition = 0.5;
-  const transition = shortTransition * 2;
+  // project variables
+  const transition = useScene().variables.get('transitionSpeed', 1)();
+  const fastTransition = transition / 2;
 
-  const freshRequestColor = '#e57d67';
-  const intermediateRequestColor = '#c24835';
-  const oldRequestColor = '#962f1b';
+  const freshRequestColor = useScene().variables.get('requestFresh', '#000000');
+  const intermediateRequestColor = useScene().variables.get('requestIntermediate', '#000000');
+  const oldRequestColor = useScene().variables.get('requestOld', '#000000');
+  const completeRequestColor = useScene().variables.get('requestComplete', '#000000');
   
-  // which background to use
-  const backgroundDark = '#0d1115';
-  const backgroundLight = '#1f2934';
-  const background = (useScene().variables.get('appearance', 'light')() === 'dark') ? backgroundDark : backgroundLight;
+  const background = useScene().variables.get('background', '#000000');
 
-
+  // reusable styling
   const headingStyle = {
     fontWeight: 700,
     fontSize: 56,
@@ -28,7 +28,8 @@ export default makeScene2D(function* (view) {
   const arrowTextStyle = {
     fontWeight: 300,
     fontSize: 36,
-    cache: true
+    cache: true,
+    fill: 'white'
   };
   const requestStyle = {
     width: 0,
@@ -36,21 +37,27 @@ export default makeScene2D(function* (view) {
     radius: 16,
     fill: freshRequestColor
   }
-  const arrowLinewidth = 4;
+  const arrowLineWidth = 4;
+  const requestHeight = 50;
+  const requestWidth = 250;
   
+  // references
   const spring = createRef<Rect>();
   const socketRequest = createRef<Line>();
   const socketResponse = createRef<Line>();
-
   const requestBox = createRef<Rect>()
   const processingBox = createRef<Rect>()
   const heroRequest = createRef<Rect>()
   const heroComplete = createRef<Rect>()
   const request1 = createRef<Rect>()
   const request2 = createRef<Rect>()
-  const request3 = createRef<Rect>()
 
-  view.fill(backgroundLight)
+  // signals
+  const heroCompletePositionX = createSignal(() => -requestWidth / 2 + heroComplete().width() / 2)
+  const requestVisibility = createSignal(0);
+  const responseVisibility = createSignal(0);
+
+  view.fill(background)
 
   view.add(
     <>
@@ -62,6 +69,7 @@ export default makeScene2D(function* (view) {
         stroke={'#5caa22'}
         radius={20}
       >
+        {/* requests and responses */}
         <Txt text={'created by Stefan Kreidel'} fill={'grey'} fontSize={28} y={500} />
         <Txt 
           text={'Spring'}
@@ -72,47 +80,39 @@ export default makeScene2D(function* (view) {
         <Line
           ref={socketRequest}
           points={[
-            new Vector2(-900, -20),
-            new Vector2(-600, -20)
+            Vector2.zero,
+            () => Vector2.right.scale(requestVisibility() * 300),
           ]}
-          lineWidth={arrowLinewidth}
+          x={-900}
+          y={-20}
+          lineWidth={arrowLineWidth}
           stroke={'white'}
           endArrow
           arrowSize={12}
-          opacity={0}
+          opacity={() => requestVisibility()}
         >
-          <Txt
-            text={'requests'}
-            y={-50}
-            x={-740}
-            fill={'white'}
-            {...arrowTextStyle}
-          />
-          <Txt />
+          <Txt text={'requests'} y={-30} x={160} {...arrowTextStyle} />
+          <></>
         </Line>
         <Line
           ref={socketResponse}
           points={[
-            new Vector2(-600, 20),
-            new Vector2(-900, 20)
+            Vector2.zero,
+            () => Vector2.left.scale(responseVisibility() * 300),
           ]}
-          lineWidth={arrowLinewidth}
+          x={-600}
+          y={20}
+          lineWidth={arrowLineWidth}
           stroke={'white'}
           endArrow
           arrowSize={12}
-          opacity={0}
+          opacity={() => responseVisibility()}
         >
-          <Txt
-            text={'responses'}
-            y={40}
-            x={-740}
-            fill={'white'}
-            {...arrowTextStyle}
-          />
-          <Txt />
+          <Txt text={'responses'} y={25} x={-140} {...arrowTextStyle} />
+          <></>
         </Line>
         
-        
+        {/* Request Box */}
         <Rect x={-350}>
           <Rect
             ref={requestBox}
@@ -124,16 +124,16 @@ export default makeScene2D(function* (view) {
             stroke={'grey'}
             opacity={0}
           >
-            <Txt text={'requests to process'} y={140} fill={'grey'} {...arrowTextStyle} />
+            <Txt text={'requests queue'} y={140} fill={'grey'} {...arrowTextStyle} />
           </Rect>
-          <Rect {...requestStyle} ref={request3} y={-120} />
-          <Rect {...requestStyle} ref={request2} y={-120} />
-          <Rect {...requestStyle} ref={request1} y={-60} />
+          <Rect {...requestStyle} ref={request2} y={-(requestHeight + 10) *2} />
+          <Rect {...requestStyle} ref={request1} y={-(requestHeight + 10)} />
           <Rect {...requestStyle} ref={heroRequest}>
-            <Rect ref={heroComplete} width={0} height={50} x={-125} radius={8} fill={'#46a33c'} />
+            <Rect ref={heroComplete} width={0} height={requestHeight} x={heroCompletePositionX} radius={8} fill={completeRequestColor} />
           </Rect>
         </Rect>
 
+        {/* Response Box */}
         <Rect
           ref={processingBox}
           width={300}
@@ -151,94 +151,66 @@ export default makeScene2D(function* (view) {
     </>
   );
 
-  // requests pop in -----------------------------------------------------------
-  yield* socketRequest().opacity(1, transition);
+  // requests get queued ------------------------------------------------------
+  yield* requestVisibility(1, transition);
 
   yield* all(
-    heroRequest().size(new Vector2(250, 50), shortTransition),
-    heroRequest().radius(8, shortTransition)
+    heroRequest().size(new Vector2(requestWidth, requestHeight), fastTransition),
+    heroRequest().radius(8, fastTransition)
   );
   yield* all(
-    request1().size(new Vector2(250, 50), shortTransition),
-    request1().radius(8, shortTransition),
-    heroRequest().fill(intermediateRequestColor, shortTransition)
+    request1().size(new Vector2(requestWidth, requestHeight), fastTransition),
+    request1().radius(8, fastTransition),
+    heroRequest().fill(intermediateRequestColor, fastTransition)
   );
   yield* all(
-    request2().size(new Vector2(250, 50), shortTransition),
-    request2().radius(8, shortTransition),
-    heroRequest().fill(oldRequestColor, shortTransition),
-    request1().fill(intermediateRequestColor, shortTransition)
+    request2().size(new Vector2(requestWidth, requestHeight), fastTransition),
+    request2().radius(8, fastTransition),
+    heroRequest().fill(oldRequestColor, fastTransition),
+    request1().fill(intermediateRequestColor, fastTransition)
   );
 
-  yield* requestBox().opacity(1, shortTransition);
+  yield* requestBox().opacity(1, fastTransition);
   yield* waitFor(transition);
 
-  heroRequest().save()
-  heroComplete().save()
-  request1().save()
-  request2().save()
-  request3().save()
+  // process request ----------------------------------------------------------
+  yield* heroRequest().position(new Vector2(700, -(10 + requestHeight) * 2), transition);
+  yield* processingBox().opacity(1, fastTransition);
+  yield* waitFor(fastTransition);
 
-  for (let i=0; i<2; i++) {
-    // process request -----------------------------------------------------------
-    yield* heroRequest().position(new Vector2(700, -120), transition);
-    yield* processingBox().opacity(1, shortTransition);
-    yield* waitFor(shortTransition);
+  yield* heroComplete().width(requestWidth / 3, fastTransition);
 
-    yield* all(
-      heroComplete().width(83, shortTransition),
-      heroComplete().position.x(-83.5, shortTransition)
-    );
+  yield* heroRequest().position.y(-(10 + requestHeight), fastTransition);
+  yield* heroComplete().width(requestWidth * 2/3, fastTransition);
 
-    yield* heroRequest().position.y(-60, shortTransition);
-    yield* all(
-      heroComplete().width(166, shortTransition),
-      heroComplete().position.x(-42, shortTransition)
-    );
+  yield* heroRequest().position.y(0, fastTransition);
+  yield* heroComplete().width(requestWidth, fastTransition);
 
-    yield* heroRequest().position.y(0, shortTransition);
-    yield* all(
-      heroComplete().width(250, shortTransition),
-      heroComplete().position.x(0, shortTransition)
-    );
+  yield* waitFor(transition);
 
-    yield* waitFor(transition);
+  // send response ------------------------------------------------------------
+  yield* heroRequest().position(new Vector2(0, 200), transition);
 
-    // send response -----------------------------------------------------------
-    yield* heroRequest().position(new Vector2(0, 200), transition);
+  yield* all(
+    heroRequest().width(0, transition),
+    heroRequest().position.x(-requestWidth / 2, transition),
+    heroComplete().width(0, transition),
+    heroComplete().position.x(0, transition),
+    responseVisibility(1, transition)
+  );
 
-    yield* all(
-      heroRequest().width(0, transition),
-      heroRequest().position.x(-125, transition),
-      heroComplete().width(0, transition),
-      socketResponse().opacity(1, transition)
-    );
+  yield* waitFor(transition);
 
-    yield* waitFor(transition);
+  // update request queue -----------------------------------------------------
+  yield* all(
+    request1().position.y(0, fastTransition),
+    request1().fill(oldRequestColor, fastTransition),
+  );
+  yield* all(
+    request2().position.y(-(10 + requestHeight), fastTransition),
+    request2().fill(intermediateRequestColor, fastTransition)
+  );
 
-    // update requests -----------------------------------------------------------
-    yield* all(
-      request1().position.y(0, shortTransition),
-      request1().fill(oldRequestColor, shortTransition),
-    );
-    yield* all(
-      request2().position.y(-60, shortTransition),
-      request2().fill(intermediateRequestColor, shortTransition)
-    );
-    yield* all(
-      request3().size(new Vector2(250, 50), shortTransition),
-      request3().radius(8, shortTransition)
-    );
-
-    yield* all(
-      heroRequest().restore(0),
-      heroComplete().restore(0),
-      request1().restore(0),
-      request2().restore(0),
-      request3().restore(0),
-    )
-
-    yield* waitFor(transition);
-  }
+  yield* waitFor(transition);
 
 });

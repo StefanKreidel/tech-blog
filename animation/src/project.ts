@@ -8,4 +8,13 @@ export default makeProject({
     // example,
     springWebmvcServlet
   ],
+  variables: {
+    background: '#1f2934',
+    spring: '#5caa22',
+    requestFresh: '#e57d67',
+    requestIntermediate: '#c24835',
+    requestOld: '#962f1b',
+    requestComplete: '#46a33c',
+    transitionSpeed: 1
+  },
 });
