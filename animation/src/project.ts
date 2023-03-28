@@ -12,8 +12,8 @@ export default makeProject({
   ],
   variables: {
     background: '#1f2934',
-    spring: '#5caa22',
-    undertow: '#4a6d8e',
+    springColor: '#5caa22',
+    undertowColor: '#4a6d8e',
     requestFresh: '#e57d67',
     requestIntermediate: '#c24835',
     requestOld: '#962f1b',

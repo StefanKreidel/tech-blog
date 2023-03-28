@@ -11,6 +11,9 @@ export default makeScene2D(function* (view) {
   const transition = useScene().variables.get('transitionSpeed', 1)();
   const fastTransition = transition / 2;
 
+  const springColor = useScene().variables.get('springColor', '#000000');
+  const undertowColor = useScene().variables.get('undertowColor', '#000000');
+
   const freshRequestColor = useScene().variables.get('requestFresh', '#000000');
   const intermediateRequestColor = useScene().variables.get('requestIntermediate', '#000000');
   const oldRequestColor = useScene().variables.get('requestOld', '#000000');
@@ -61,12 +64,13 @@ export default makeScene2D(function* (view) {
 
   view.add(
     <>
+      {/* Spring container */}
       <Rect
         ref={spring}
         width={'60%'}
         height={'60%'}
         lineWidth={10}
-        stroke={'#5caa22'}
+        stroke={springColor}
         radius={20}
       >
         {/* requests and responses */}
@@ -74,79 +78,91 @@ export default makeScene2D(function* (view) {
         <Txt 
           text={'Spring'}
           y={-300}
-          fill={'#5caa22'}
+          fill={springColor}
           {...headingStyle}
         />
-        <Line
-          ref={socketRequest}
-          points={[
-            Vector2.zero,
-            () => Vector2.right.scale(requestVisibility() * 300),
-          ]}
-          x={-900}
-          y={-20}
-          lineWidth={arrowLineWidth}
-          stroke={'white'}
-          endArrow
-          arrowSize={12}
-          opacity={() => requestVisibility()}
-        >
-          <Txt text={'requests'} y={-30} x={160} {...arrowTextStyle} />
-          <></>
-        </Line>
-        <Line
-          ref={socketResponse}
-          points={[
-            Vector2.zero,
-            () => Vector2.left.scale(responseVisibility() * 300),
-          ]}
-          x={-600}
-          y={20}
-          lineWidth={arrowLineWidth}
-          stroke={'white'}
-          endArrow
-          arrowSize={12}
-          opacity={() => responseVisibility()}
-        >
-          <Txt text={'responses'} y={25} x={-140} {...arrowTextStyle} />
-          <></>
-        </Line>
-        
-        {/* Request Box */}
-        <Rect x={-350}>
-          <Rect
-            ref={requestBox}
-            width={300}
-            height={220}
-            lineWidth={3}
-            y={-60}
-            radius={10}
-            stroke={'grey'}
-            opacity={0}
-          >
-            <Txt text={'requests queue'} y={140} fill={'grey'} {...arrowTextStyle} />
-          </Rect>
-          <Rect {...requestStyle} ref={request2} y={-(requestHeight + 10) *2} />
-          <Rect {...requestStyle} ref={request1} y={-(requestHeight + 10)} />
-          <Rect {...requestStyle} ref={heroRequest}>
-            <Rect ref={heroComplete} width={0} height={requestHeight} x={heroCompletePositionX} radius={8} fill={completeRequestColor} />
-          </Rect>
-        </Rect>
+      </Rect>
 
-        {/* Response Box */}
+      {/* Undertow container */}
+      <Rect
+        width={'50%'}
+        height={'30%'}
+        lineWidth={5}
+        stroke={undertowColor}
+        radius={16}
+        y={-50}
+      >
+      </Rect>
+
+      <Line
+        ref={socketRequest}
+        points={[
+          Vector2.zero,
+          () => Vector2.right.scale(requestVisibility() * 300),
+        ]}
+        x={-900}
+        y={-20}
+        lineWidth={arrowLineWidth}
+        stroke={'white'}
+        endArrow
+        arrowSize={12}
+        opacity={() => requestVisibility()}
+      >
+        <Txt text={'requests'} y={-30} x={160} {...arrowTextStyle} />
+        <></>
+      </Line>
+      <Line
+        ref={socketResponse}
+        points={[
+          Vector2.zero,
+          () => Vector2.left.scale(responseVisibility() * 300),
+        ]}
+        x={-600}
+        y={20}
+        lineWidth={arrowLineWidth}
+        stroke={'white'}
+        endArrow
+        arrowSize={12}
+        opacity={() => responseVisibility()}
+      >
+        <Txt text={'responses'} y={25} x={-140} {...arrowTextStyle} />
+        <></>
+      </Line>
+      
+      {/* Request Box */}
+      <Rect x={-350}>
         <Rect
-          ref={processingBox}
+          ref={requestBox}
           width={300}
           height={220}
           lineWidth={3}
-          x={350}
           y={-60}
           radius={10}
           stroke={'grey'}
           opacity={0}
         >
-          <Txt text={'processing'} y={140} fill={'grey'} {...arrowTextStyle} />
+          <Txt text={'requests queue'} y={140} fill={'grey'} {...arrowTextStyle} />
         </Rect>
+        <Rect {...requestStyle} ref={request2} y={-(requestHeight + 10) *2} />
+        <Rect {...requestStyle} ref={request1} y={-(requestHeight + 10)} />
+        <Rect {...requestStyle} ref={heroRequest}>
+          <Rect ref={heroComplete} width={0} height={requestHeight} x={heroCompletePositionX} radius={8} fill={completeRequestColor} />
+        </Rect>
+      </Rect>
+
+      {/* Response Box */}
+      <Rect
+        ref={processingBox}
+        width={300}
+        height={220}
+        lineWidth={3}
+        x={350}
+        y={-60}
+        radius={10}
+        stroke={'grey'}
+        opacity={0}
+      >
+        <Txt text={'processing'} y={140} fill={'grey'} {...arrowTextStyle} />
       </Rect>
     </>
   );

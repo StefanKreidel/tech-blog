@@ -10,6 +10,8 @@ export default makeScene2D(function* (view) {
   // project variables
   const transition = useScene().variables.get('transitionSpeed', 1)();
   const fastTransition = transition / 2;
+  
+  const springColor = useScene().variables.get('springColor', '#000000');
 
   const freshRequestColor = useScene().variables.get('requestFresh', '#000000');
   const intermediateRequestColor = useScene().variables.get('requestIntermediate', '#000000');
@@ -66,7 +68,7 @@ export default makeScene2D(function* (view) {
         width={'60%'}
         height={'60%'}
         lineWidth={10}
-        stroke={'#5caa22'}
+        stroke={springColor}
         radius={20}
       >
         {/* requests and responses */}
@@ -74,7 +76,7 @@ export default makeScene2D(function* (view) {
         <Txt 
           text={'Spring'}
           y={-300}
-          fill={'#5caa22'}
+          fill={springColor}
           {...headingStyle}
         />
         <Line
