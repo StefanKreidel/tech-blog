@@ -47,7 +47,12 @@ export default makeScene2D(function* (view) {
     radius: 8,
     fill: requestColor
   }
-  const arrowLineWidth = 3;
+  const arrowStyle = {
+    lineWidth: 3,
+    stroke: 'white',
+    endArrow: true,
+    arrowSize: 12
+  }
   
   // references
   const spring = createRef<Rect>();
@@ -95,46 +100,37 @@ export default makeScene2D(function* (view) {
 
       {/* Connection arrows */}
       <Line
+        {...arrowStyle}
+        lineDash={[20, 20]}
         points={[
           Vector2.zero,
           () => Vector2.right.scale(connectionArrowSignals[0]() * 300),
         ]}
         x={-850}
         y={-30}
-        lineWidth={arrowLineWidth}
-        lineDash={[20, 20]}
-        stroke={'white'}
-        endArrow
-        arrowSize={12}
         opacity={() => connectionArrowSignals[0]()}
       />
       <Line
         ref={heroConnectionArrow}
+        {...arrowStyle}
+        lineDash={[20, 20]}
         points={[
           Vector2.zero,
           () => Vector2.right.scale(connectionArrowSignals[1]() * 300),
         ]}
         x={-850}
         y={30}
-        lineWidth={arrowLineWidth}
-        lineDash={[20, 20]}
-        stroke={'white'}
-        endArrow
-        arrowSize={12}
         opacity={() => connectionArrowSignals[1]()}
       />
       <Line
+        {...arrowStyle}
+        lineDash={[20, 20]}
         points={[
           Vector2.zero,
           () => Vector2.right.scale(connectionArrowSignals[2]() * 300),
         ]}
         x={-850}
         y={150}
-        lineWidth={arrowLineWidth}
-        lineDash={[20, 20]}
-        stroke={'white'}
-        endArrow
-        arrowSize={12}
         opacity={() => connectionArrowSignals[2]()}
       />
 
@@ -163,42 +159,33 @@ export default makeScene2D(function* (view) {
         </Shape>
 
         <Line
+          {...arrowStyle}
           points={[
             Vector2.zero,
             () => new Vector2(1, 0.37).scale(requestArrowSignals[0]() * 160),
           ]}
           x={-200}
           y={-70}
-          lineWidth={arrowLineWidth}
-          stroke={'white'}
-          endArrow
-          arrowSize={12}
           opacity={() => requestArrowSignals[0]()}
         />
         <Line
+          {...arrowStyle}
           points={[
             Vector2.zero,
             () => new Vector2(1, -0.37).scale(requestArrowSignals[1]() * 160),
           ]}
           x={-200}
           y={-10}
-          lineWidth={arrowLineWidth}
-          stroke={'white'}
-          endArrow
-          arrowSize={12}
           opacity={() => requestArrowSignals[1]()}
         />
         <Line
+          {...arrowStyle}
           points={[
             Vector2.zero,
             () => Vector2.right.scale(requestArrowSignals[2]() * 160),
           ]}
           x={-200}
           y={110}
-          lineWidth={arrowLineWidth}
-          stroke={'white'}
-          endArrow
-          arrowSize={12}
           opacity={() => requestArrowSignals[2]()}
         />
 
