@@ -53,9 +53,11 @@ Notice that for this post we chose spring-boot-starter-**web**. This means that 
 
 This tells us that managing incoming connections and requests is not done by Spring itself but rather by the servlet container.
 
-
-
 ## default integration of servers in spring web-mvc
+
+<motion-canvas-player 
+    src="{{ '/js/animation/spring-servlet-container.js' | prepend: site.baseurl }}">
+</motion-canvas-player >
 
 - small explanation on how everything is working together
 - web is blocking -> tomcat and jetty work on blocking servlets

@@ -25,13 +25,16 @@ export default makeScene2D(function* (view) {
     fontWeight: 700,
     fontSize: 56,
     offsetY: -1,
-    cache: true
+    cache: true,
+    fill: springColor,
+    fontFamily: 'Noto Sans Display'
   };
   const arrowTextStyle = {
     fontWeight: 300,
     fontSize: 36,
     cache: true,
-    fill: 'white'
+    fill: 'white',
+    fontFamily: 'Noto Sans Display'
   };
   const requestStyle = {
     width: 0,
@@ -72,13 +75,8 @@ export default makeScene2D(function* (view) {
         radius={20}
       >
         {/* requests and responses */}
+        <Txt text={'Spring'} y={-300} {...headingStyle} />
         <Txt text={'created by Stefan Kreidel'} fill={'grey'} fontSize={28} y={500} />
-        <Txt 
-          text={'Spring'}
-          y={-300}
-          fill={springColor}
-          {...headingStyle}
-        />
         <Line
           ref={socketRequest}
           points={[

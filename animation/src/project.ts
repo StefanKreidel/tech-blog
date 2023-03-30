@@ -2,22 +2,14 @@ import {makeProject} from '@motion-canvas/core';
 
 import example from './scenes/example?scene';
 import springLifecycleBasic from './scenes/spring-lifecycle-basic?scene'
-import springWithServletContainer from './scenes/spring-with-servlet-container'
+import springWithServletContainer from './scenes/spring-with-servlet-container?scene'
+
+import './global.css';
 
 export default makeProject({
   scenes: [
     // example,
-    //springLifecycleBasic
+    // springLifecycleBasic,
     springWithServletContainer
-  ],
-  variables: {
-    background: '#1f2934',
-    springColor: '#5caa22',
-    undertowColor: '#4a6d8e',
-    requestFresh: '#e57d67',
-    requestIntermediate: '#c24835',
-    requestOld: '#962f1b',
-    requestComplete: '#46a33c',
-    transitionSpeed: 1
-  },
+  ]
 });
