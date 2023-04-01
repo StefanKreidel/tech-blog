@@ -4,6 +4,7 @@ import example from './scenes/example?scene';
 import springLifecycleBasic from './scenes/spring-lifecycle-basic?scene'
 import springWithServletContainer from './scenes/spring-with-servlet-container?scene'
 import springModelViewController from './scenes/spring-model-view-controller?scene'
+import springThreads from './scenes/spring-threads?scene'
 
 import './global.css';
 
@@ -12,6 +13,7 @@ export default makeProject({
     // example,
     // springLifecycleBasic,
     // springWithServletContainer,
-    springModelViewController,
+    // springModelViewController,
+    springThreads
   ]
 });

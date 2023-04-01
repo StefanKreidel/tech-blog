@@ -187,4 +187,18 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 
+  // motion canvas player controls
+  // only one player can be active at each given time
+  const motionCanvasPlayers = document.getElementsByTagName('motion-canvas-player');
+
+  for(let player of motionCanvasPlayers) {
+    player.addEventListener("click", function() {
+      for (let playerToStop of motionCanvasPlayers) {
+        if (playerToStop != player) {
+          playerToStop.setPlaying(false);
+        }
+      }
+    });
+  }
+
 });

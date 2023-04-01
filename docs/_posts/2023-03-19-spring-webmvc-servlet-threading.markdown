@@ -55,7 +55,7 @@ This tells us that managing incoming connections and requests is not done by Spr
 
 ## Embedded Servlet Container
 
-<motion-canvas-player 
+<motion-canvas-player
     src="{{ '/js/animation/spring-servlet-container.js' | prepend: site.baseurl }}">
 </motion-canvas-player >
 
