@@ -53,16 +53,60 @@ Notice that for this post we chose spring-boot-starter-**web**. This means that 
 
 This tells us that managing incoming connections and requests is not done by Spring itself but rather by the servlet container.
 
-## default integration of servers in spring web-mvc
+## Embedded Servlet Container
 
 <motion-canvas-player 
     src="{{ '/js/animation/spring-servlet-container.js' | prepend: site.baseurl }}">
 </motion-canvas-player >
 
-- small explanation on how everything is working together
-- web is blocking -> tomcat and jetty work on blocking servlets
+Upon startup, SpringBoot (amongst other things) starts the embedded servlet container. By default this will be Tomcat but it can easily be replaced by configuring the dependencies accordingly:
 
-### what is blocking (and vs non blocking)
+```gradle
+// build.gradle.kts
+dependencies {
+  implementation("org.springframework.boot:spring-boot-starter-web") {
+    exclude(module="spring-boot-starter-tomcat")
+  }
+  implementation("org.springframework.boot:spring-boot-starter-undertow")
+}
+```
+
+As mentioned, the servlet container is used to handle incoming requests. It accepts new HTTP connections and subsequent requests. New requests will be added to a queue ready to be processed. A central servlet, the _dispatcher servlet_, handle scheduling of request processing and "hands requests over". The HTTP connection is kept open until the requests has been processed or a specified timeout has been reached.
+
+Each servlet container has [different properties and defaults](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#appendix.application-properties.server) for connection and request queues.
+
+| Servlet Container | Connection Limits | Request Queue |
+| :---------------: | ----------------- | ------------- |
+| Tomcat | can be set via `server.tomcat.max-connections`;<br />the default is 8192 | can be set via `server.tomcat.accept-count`;<br />the default is 100 |
+| Jetty | has no limit;<br />new connections are only allowed until request queue is full | can be set via `server.jetty.threads.max-queue-capacity`;<br />the default is computed based on number of processing threads |
+| Undertow | has no limit;<br />new connections are only allowed until I/O threads are saturated | Undertow does not work on a request queue but on I/O threads. A new request can only be processed if at least one I/O thread is free.<br /><br />can be set via `server.undertow.threads.io`;<br />default is equal to the number of available processors |
+
+## Spring Web MVC: Model, View and Controller
+
+Now that we have an understanding of how incoming requests are handled and processed by Spring in tandem with a servlet container, it is time to shed some light on the acronym MVC, which of course stands for _Model-View-Controller_.
+
+<motion-canvas-player 
+    src="{{ '/js/animation/spring-mvc.js' | prepend: site.baseurl }}">
+</motion-canvas-player >
+
+Now this might not look familiar if you have only ever implemented REST APIs. Spring Web MVC implements three integral parts:
+- The _**C**ontroller_ which executes our business logic and returns the response in form of a _**M**odel_. The latter is different form nowadays somewhat classical JSON payloads.
+- The view resolver determines the correct _**V**iew_ to render for each request.
+- The view renderer then renders the view with input provided by the _**M**odel_.
+
+In this scenario we return a fully server-side rendered HTML document. The aforementioned view renderer is not a standard Spring component but Spring provides good integrations for some common rendering frameworks such as [Thymeleaf](https://www.thymeleaf.org), [FreeMarker](https://freemarker.apache.org) or [JSP](https://www.oracle.com/java/technologies/jspt.html).
+
+Moving on, we will not focus on the Model and View parts of MVC any longer and will instead dive deeper into how Spring supports parallel execution of multiple requests (the parts previously summarized as _Controller_ and _business logic_).
+
+## Spring Web: The Blocking Stack
+
+Spring Web is implemented around a blocking philosophy. This means that a single thread will process one specific request. Each compute step is executed on that thread and for each blocking I/O request (e.g. database call), the thread will idle and wait for the blocking operation to finish.
+
+This is high-level explanation and will be explained in more detail in an upcoming post. For now, the important part is that regardless of the servlet container, we only have a finite pool of threads. As long as some a free, we can process new requests. As soon as all threads are busy, we introduce back-pressure. In the case of Tomcat or Jetty, we start filling the request queue. In the case of Undertow, we start denying new requests.
+
+<motion-canvas-player 
+    src="{{ '/js/animation/spring-servlet-container.js' | prepend: site.baseurl }}">
+</motion-canvas-player >
 
 just a general overview (another post)
 

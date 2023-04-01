@@ -76,7 +76,7 @@ export default makeScene2D(function* (view) {
       >
         {/* requests and responses */}
         <Txt text={'Spring'} y={-300} {...headingStyle} />
-        <Txt text={'created by Stefan Kreidel'} fill={'grey'} fontSize={28} y={500} />
+        <Txt text={'created by Stefan Kreidel'} fill={'grey'} fontSize={28} y={500} fontFamily={'Noto Sans Display'} />
         <Line
           ref={socketRequest}
           points={[

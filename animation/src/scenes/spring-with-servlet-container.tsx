@@ -95,7 +95,7 @@ export default makeScene2D(function* (view) {
         radius={20}
       >
         <Txt text={'Spring'} y={-350} {...headingStyle} />
-        <Txt text={'created by Stefan Kreidel'} fill={'grey'} fontSize={28} y={500} />
+        <Txt text={'created by Stefan Kreidel'} fill={'grey'} fontSize={28} y={500} fontFamily={'Noto Sans Display'} />
       </Rect>
 
       {/* Connection arrows */}

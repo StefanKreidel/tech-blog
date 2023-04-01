@@ -3,6 +3,7 @@ import {makeProject} from '@motion-canvas/core';
 import example from './scenes/example?scene';
 import springLifecycleBasic from './scenes/spring-lifecycle-basic?scene'
 import springWithServletContainer from './scenes/spring-with-servlet-container?scene'
+import springModelViewController from './scenes/spring-model-view-controller?scene'
 
 import './global.css';
 
@@ -10,6 +11,7 @@ export default makeProject({
   scenes: [
     // example,
     // springLifecycleBasic,
-    springWithServletContainer
+    // springWithServletContainer,
+    springModelViewController,
   ]
 });
