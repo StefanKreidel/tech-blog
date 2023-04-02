@@ -232,7 +232,7 @@ From a technical point of view there is no clear benefit unless you plan to migr
 
 Implementing this is also straight forward but might not look intuitive at first.
 
-```gradle
+```groovy
 // build.gradle.kts
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-web")
