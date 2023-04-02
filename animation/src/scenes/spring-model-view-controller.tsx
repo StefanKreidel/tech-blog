@@ -305,7 +305,7 @@ export default makeScene2D(function* (view) {
   yield* waitFor(shortTransition);
 
   yield all(
-    heroRequest().fill('4a8e6a', longTransition * 3),
+    heroRequest().fill('#4a8e6a', longTransition * 3),
     heroRequest().width(modelViewStyle.width, longTransition * 3),
     heroRequest().height(modelViewStyle.height, longTransition * 3)
   );

@@ -85,11 +85,13 @@ export default makeScene2D(function* (view) {
   const userService = createRef<Rect>();
   const greetService = createRef<Rect>();
   const database = createRef<Icon>();
+  const databaseArrow = createRef<Line>();
   const threads: Rect[] = [];
 
   // signals
   const connectionArrowSignal = createSignal(0);
   const databaseArrowSignal = createSignal(0);
+  const heroPosition = createSignal(new Vector2(-440, 30))
 
 
   view.fill(background)
@@ -249,7 +251,7 @@ export default makeScene2D(function* (view) {
 
       {/* Database */}
       <Line
-        ref={heroConnectionArrow}
+        ref={databaseArrow}
         {...arrowStyle}
         lineDash={[20, 20]}
         points={[
@@ -305,6 +307,108 @@ export default makeScene2D(function* (view) {
 
 
   // pop in
+  yield* tomcat().opacity(1, shortTransition);
+  yield* connectionArrowSignal(1, shortTransition);
+  yield* all(
+    connections().restore(shortTransition),
+    connectionsText().restore(shortTransition)
+  );
+  yield* all(
+    requests().restore(shortTransition),
+    requestsText().restore(shortTransition)
+  );
+  yield* dispatcher().opacity(1, shortTransition);
+
+  yield* waitFor(longTransition);
+
+  yield* controller().opacity(1, shortTransition);
+  yield* chain(
+    threadPoolExecutor().opacity(1, shortTransition),
+    threads[0].restore(shortTransition),
+    threads[1].restore(shortTransition)
+  );
+
+  yield* waitFor(longTransition);
+
+
+  // thread handles request
+  const heroThread = threads[0];
+  heroThread.save();
+  heroPosition(dispatcher().absolutePosition().addY(40));
+  yield* all(
+    heroRequest().restore(longTransition),
+    heroRequest().absolutePosition(heroPosition, longTransition),
+    heroThread.absolutePosition(heroPosition, longTransition),
+  );
+  yield* waitFor(shortTransition);
+
+
+  // dispatch to controller
+  yield* heroPosition(controller().absolutePosition().addY(20), longTransition);
+  yield* waitFor(shortTransition);
+  yield* all(
+    userService().opacity(1, shortTransition),
+    database().opacity(1, shortTransition)
+  );
+  yield* greetService().opacity(1, shortTransition);
+  yield* waitFor(shortTransition);
+
+
+  // process at user service
+  yield* heroPosition(userService().absolutePosition().addY(20), longTransition);
+  yield* all(
+    requestWaiting().restore(shortTransition),
+    databaseArrowSignal(1, shortTransition)
+  );
+  yield heroRequest().fill('#8e8372', longTransition * 2);
+  for (let i=1; i<3; i++) {
+    yield* requestWaiting().rotation(360 * i, longTransition);
+  }
+  yield* chain(
+    databaseArrow().arrowSize(0, shortTransition),
+    databaseArrow().endArrow(false, 0),
+    databaseArrow().startArrow(true, 0),
+    databaseArrow().arrowSize(12, shortTransition),
+  );
+  yield* all(
+    requestWaiting().size(0, shortTransition),
+    databaseArrowSignal(0, shortTransition)
+  );
+
+  yield* waitFor(shortTransition);
+  yield* heroPosition(controller().absolutePosition().addY(20), longTransition);
+  yield* waitFor(shortTransition);
+
+
+  // process at greet service
+  yield* heroPosition(greetService().absolutePosition().addY(20), longTransition);
+  
+  yield heroRequest().fill('#46a33c', longTransition * 3)
+  for (let i=1; i<4; i++) {
+    yield* requestProcessing().endAngle(330 * i, shortTransition);
+    yield* requestProcessing().startAngle(330 * i, shortTransition);
+  }
+
+  yield* waitFor(shortTransition);
+  yield* heroPosition(controller().absolutePosition().addY(20), longTransition);
+  yield* waitFor(shortTransition);
+
+
+  // send response
+  yield* heroPosition(dispatcher().absolutePosition().addY(40), longTransition);
+  yield* waitFor(shortTransition);
+
+  yield* chain(
+    heroConnectionArrow().arrowSize(0, shortTransition),
+    heroConnectionArrow().endArrow(false, 0),
+    heroConnectionArrow().startArrow(true, 0),
+    heroConnectionArrow().arrowSize(12, shortTransition),
+    );
+    yield* all(
+    heroThread.restore(longTransition),
+    heroRequest().size(0, longTransition),
+    connectionArrowSignal(0, longTransition)
+  );
 
 
 

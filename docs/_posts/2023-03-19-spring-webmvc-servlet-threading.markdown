@@ -105,7 +105,7 @@ Spring Web is implemented around a blocking philosophy. This means that a single
 This is high-level explanation and will be explained in more detail in an upcoming post. For now, the important part is that regardless of the servlet container, we only have a finite pool of threads. As long as some a free, we can process new requests. As soon as all threads are busy, we introduce back-pressure. In the case of Tomcat or Jetty, we start filling the request queue. In the case of Undertow, we start denying new requests.
 
 <motion-canvas-player 
-    src="{{ '/js/animation/spring-servlet-container.js' | prepend: site.baseurl }}">
+    src="{{ '/js/animation/spring-threads.js' | prepend: site.baseurl }}">
 </motion-canvas-player >
 
 just a general overview (another post)
