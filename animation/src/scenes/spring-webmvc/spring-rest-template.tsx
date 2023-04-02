@@ -1,5 +1,5 @@
 import { makeScene2D } from '@motion-canvas/2d/lib/scenes';
-import { Line, Rect, Txt, Shape, Circle } from '@motion-canvas/2d/lib/components';
+import { Line, Rect, Txt, Circle, Icon } from '@motion-canvas/2d/lib/components';
 import { createRef, makeRef, useScene } from '@motion-canvas/core/lib/utils';
 import { all, chain, waitFor } from '@motion-canvas/core/lib/flow';
 import { Vector2 } from '@motion-canvas/core/lib/types';
@@ -48,11 +48,17 @@ export default makeScene2D(function* (view) {
     radius: 8,
     fill: requestColor
   }
-  const modelViewStyle = {
-    width: 160,
-    height: 80,
-    radius: 8,
-    fill: 'black'
+  const threadStyle = {
+    width: 90,
+    height: 50,
+    lineWidth: 5,
+    radius: 4,
+    stroke: '#7a858f'
+  }
+  const connectionStyle = {
+    size: 40,
+    radius: 20,
+    fill: connectionColor
   }
   const arrowStyle = {
     lineWidth: 3,
@@ -66,24 +72,26 @@ export default makeScene2D(function* (view) {
   const tomcat = createRef<Rect>();
   const dispatcher = createRef<Rect>();
   const controller = createRef<Rect>();
-  const viewResolver = createRef<Rect>();
-  const viewResponse = createRef<Rect>();
-  const viewResponseText = createRef<Txt>();
-  const viewRenderer = createRef<Rect>();
   const requestProcessing = createRef<Circle>();
+  const requestWaiting = createRef<Icon>();
   const heroConnectionArrow = createRef<Line>();
-  const viewResolverArrow = createRef<Line>();
   const heroRequest = createRef<Rect>();
-  const heroRequestText = createRef<Txt>();
   const connections = createRef<Rect>();
   const connectionsText = createRef<Txt>();
   const requests = createRef<Rect>();
   const requestsText = createRef<Txt>();
+  const threadPoolExecutor = createRef<Rect>();
+  const connectionPool = createRef<Rect>();
+  const restTemplate = createRef<Rect>();
+  const githubApi = createRef<Icon>();
+  const githubApiArrow = createRef<Line>();
+  const threads: Rect[] = [];
+  const clientConnections: Rect[] = [];
 
   // signals
   const connectionArrowSignal = createSignal(0);
-  const viewResolverArrowSignal = createSignal(0);
-
+  const githubArrowSignal = createSignal(0);
+  const heroPosition = createSignal(new Vector2(-440, 30))
 
 
   view.fill(background)
@@ -128,7 +136,7 @@ export default makeScene2D(function* (view) {
           lineWidth={6}
           stroke={'white'}
         />
-        <Txt {...heading3Style} text={'Model'} ref={heroRequestText} />
+        <Icon ref={requestWaiting} icon={'mdi:timer-sand'} color={'white'} size={40} />
       </Rect>
 
       {/* Tomcat container */}
@@ -184,7 +192,7 @@ export default makeScene2D(function* (view) {
         </Rect>
       </Rect>
 
-      {/* Controller */}
+      {/* Controller and Beans */}
       <Rect
         ref={controller}
         width={350}
@@ -192,64 +200,99 @@ export default makeScene2D(function* (view) {
         lineWidth={5}
         stroke={'#4a8e6a'}
         radius={16}
-        x={430}
-        y={-220}
+        x={100}
+        y={-120}
       >
-        <Txt {...heading2Style} textAlign='center' y={-50} fill={'#4a8e6a'} text='Controller' />
+        <Txt {...heading2Style} textAlign='center' y={-50} fill={'#4a8e6a'} text='RepoController' />
+      </Rect>
+      <Rect
+        ref={restTemplate}
+        width={250}
+        height={140}
+        lineWidth={5}
+        stroke={'#8e8372'}
+        radius={16}
+        x={480}
+        y={-120}
+      >
+        <Txt {...heading2Style} textAlign='center' y={-30} fill={'#8e8372'} text='RestTemplate' />
       </Rect>
 
-      {/* View Resolver */}
+      {/* GitHub API */}
       <Line
-        ref={viewResolverArrow}
+        ref={githubApiArrow}
         {...arrowStyle}
+        lineDash={[20, 20]}
         points={[
           Vector2.zero,
-          () => Vector2.right.scale(viewResolverArrowSignal() * 380),
+          () => new Vector2(1, -0.1).scale(githubArrowSignal() * 160),
         ]}
-        x={-140}
-        y={30}
-        opacity={() => viewResolverArrowSignal()}
+        x={590}
+        y={-100}
+        opacity={() => githubArrowSignal()}
       />
+      <Icon
+        ref={githubApi}
+        icon={'carbon:cloud-app'}
+        size={150}
+        x={820}
+        y={-120}
+        color={'lightgray'}
+      >
+        <Txt {...heading3Style} y={100} text={'GitHub API'} fill={'lightgray'} />
+      </Icon>
+
+
+      {/* Pools */}
       <Rect
-        ref={viewResolver}
+        ref={threadPoolExecutor}
         width={350}
         height={200}
         lineWidth={5}
         stroke={'#7a858f'}
         radius={16}
-        x={430}
+        x={90}
+        y={200}
       >
-        <Txt {...heading2Style} textAlign='center' y={-50} fill={'#7a858f'} text='View Resolver' />
-        <Rect {...modelViewStyle} ref={viewResponse} y={25} fill={'#7a858f'}>
-          <Txt {...heading3Style} ref={viewResponseText} text={'View'} />
-        </Rect>
+        <Txt {...heading2Style} textAlign='center' y={-50} fill={'#7a858f'} text='ThreadPoolExecutor' />
+        <Txt {...heading2Style} x={-150} y={30} text={'['} />
+        <Rect {...threadStyle} x={-80} y={30} ref={makeRef(threads, 0)} />
+        <Txt {...heading2Style} y={30} text={'...'} />
+        <Rect {...threadStyle} x={80} y={30} ref={makeRef(threads, 1)} />
+        <Txt {...heading2Style} x={150} y={30} text={']'} />
       </Rect>
 
-      {/* Renderer */}
       <Rect
-        ref={viewRenderer}
+        ref={connectionPool}
         width={350}
         height={200}
         lineWidth={5}
-        stroke={'#8e8372'}
+        stroke={'#8e7b5c'}
         radius={16}
-        x={430}
-        y={220}
+        x={460}
+        y={200}
       >
-        <Txt {...heading2Style} textAlign='center' y={-50} fill={'#8e8372'} text='View Renderer' />
+        <Txt {...heading2Style} textAlign='center' y={-50} fill={'#8e7b5c'} text='ConnectionPool' />
+        <Txt {...heading2Style} x={-150} y={30} text={'['} />
+        <Rect {...connectionStyle} x={-95} y={30} ref={makeRef(clientConnections, 0)} />
+        <Rect {...connectionStyle} x={-20} y={30} ref={makeRef(clientConnections, 1)} />
+        <Txt {...heading2Style} y={30} x={40} text={'...'} />
+        <Rect {...connectionStyle} x={95} y={30} ref={makeRef(clientConnections, 2)} />
+        <Txt {...heading2Style} x={150} y={30} text={']'} />
       </Rect>
     </>
   );
 
   // animation setup
+  threads.forEach(thread => thread.save());
+  clientConnections.forEach(connection => connection.save());
+
   connections().save();
   connectionsText().save();
   requests().save();
   requestsText().save();
   heroRequest().save();
-  heroRequestText().save();
-  viewResponse().save();
-  viewResponseText().save();
+  requestWaiting().save();
 
   yield* all(
     tomcat().opacity(0, 0),
@@ -260,12 +303,17 @@ export default makeScene2D(function* (view) {
     dispatcher().opacity(0, 0),
     heroRequest().size(0, 0),
     requestProcessing().endAngle(0, 0),
-    heroRequestText().fontSize(0, 0),
-    viewResponseText().fontSize(0, 0),
-    viewResponse().size(0, 0),
+    requestWaiting().size(0, 0),
     controller().opacity(0, 0),
-    viewResolver().opacity(0, 0),
-    viewRenderer().opacity(0, 0)
+    restTemplate().opacity(0, 0),
+    githubApi().opacity(0, 0),
+    threads[0].lineWidth(0, 0),
+    threads[1].lineWidth(0, 0),
+    threadPoolExecutor().opacity(0, 0),
+    clientConnections[0].size(0, 0),
+    clientConnections[1].size(0, 0),
+    clientConnections[2].size(0, 0),
+    connectionPool().opacity(0, 0)
   );
 
   yield* waitFor(longTransition);
@@ -285,88 +333,87 @@ export default makeScene2D(function* (view) {
   yield* dispatcher().opacity(1, shortTransition);
 
   yield* waitFor(longTransition);
-  
+
+  yield* controller().opacity(1, shortTransition);
+  yield* chain(
+    threadPoolExecutor().opacity(1, shortTransition),
+    threads[0].restore(shortTransition),
+    threads[1].restore(shortTransition)
+  );
+
+  yield* waitFor(longTransition);
+
+
+  // thread handles request
+  const heroThread = threads[0];
+  heroThread.save();
+  heroPosition(dispatcher().absolutePosition().addY(40));
+  yield* all(
+    heroRequest().restore(longTransition),
+    heroRequest().absolutePosition(heroPosition, longTransition),
+    heroThread.absolutePosition(heroPosition, longTransition),
+  );
+  yield* waitFor(shortTransition);
+
 
   // dispatch to controller
+  yield* heroPosition(controller().absolutePosition().addY(20), longTransition);
+  yield* waitFor(shortTransition);
+  yield* chain(
+    restTemplate().opacity(1, shortTransition),
+    githubApi().opacity(1, shortTransition),
+    connectionPool().opacity(1, shortTransition),
+    clientConnections[0].restore(shortTransition),
+    clientConnections[1].restore(shortTransition),
+    clientConnections[2].restore(shortTransition),
+  );
+  yield* waitFor(longTransition * 2);
+
+
+  // process at rest template
+  const heroConnection = clientConnections[1];
+  heroConnection.save();
+  yield* chain(
+    heroPosition(restTemplate().absolutePosition().addY(50).addX(-80), longTransition),
+    heroConnection.absolutePosition(restTemplate().absolutePosition().addY(50).addX(110), longTransition)
+  );
+  yield* waitFor(shortTransition);
+
+  heroConnection.save();
   yield* all(
-    heroRequest().restore(shortTransition),
-    heroRequest().absolutePosition(dispatcher().absolutePosition, shortTransition),
-    heroRequest().position.y(80, shortTransition)
+    heroConnection.width(requestStyle.width, shortTransition),
+    heroConnection.height(requestStyle.height, shortTransition),
+    heroConnection.radius(requestStyle.radius * 2, shortTransition),
+    requestWaiting().restore(shortTransition),
+    githubArrowSignal(1, shortTransition)
   );
-
-  yield* waitFor(shortTransition);
-  yield* controller().opacity(1, shortTransition);
-  yield* waitFor(shortTransition);
-
-  yield* all(
-    heroRequest().absolutePosition(controller().absolutePosition, longTransition),
-    heroRequest().position.y(-195, longTransition)
-  );
-  yield* waitFor(shortTransition);
-
-  yield all(
-    heroRequest().fill('#4a8e6a', longTransition * 3),
-    heroRequest().width(modelViewStyle.width, longTransition * 3),
-    heroRequest().height(modelViewStyle.height, longTransition * 3)
-  );
-  for (let i=1; i<4; i++) {
-    yield* requestProcessing().endAngle(330 * i, shortTransition);
-    yield* requestProcessing().startAngle(330 * i, shortTransition);
+  for (let i=1; i<3; i++) {
+    yield* requestWaiting().rotation(360 * i, longTransition);
   }
-  yield* heroRequestText().restore(shortTransition);
-  yield* waitFor(longTransition);
 
+  yield* chain(
+    githubApiArrow().arrowSize(0, shortTransition),
+    githubApiArrow().endArrow(false, 0),
+    githubApiArrow().startArrow(true, 0),
+    githubApiArrow().arrowSize(12, shortTransition),
+  );
   yield* all(
-    heroRequest().absolutePosition(dispatcher().absolutePosition, longTransition),
-    heroRequest().position.y(45, longTransition)
-  );
-  yield* waitFor(longTransition);
-
-  // dispatch to view resolver
-  yield* chain(
-    viewResolver().opacity(1, shortTransition),
-    viewResolverArrowSignal(1, shortTransition),
-    all(
-      viewResponse().restore(shortTransition),
-      viewResponseText().restore(shortTransition)
-    )
-  );
-  yield* chain(
-    viewResolverArrow().arrowSize(0, shortTransition),
-    viewResolverArrow().endArrow(false, 0),
-    viewResolverArrow().startArrow(true, 0),
-    viewResolverArrow().arrowSize(12, shortTransition),
+    heroConnection.restore(shortTransition),
+    heroRequest().fill('#46a33c', shortTransition),
+    requestWaiting().size(0, shortTransition),
+    githubArrowSignal(0, shortTransition)
   );
 
-  yield* all(
-    viewResolverArrowSignal(0, longTransition),
-    viewResponse().absolutePosition(dispatcher().absolutePosition, longTransition),
-    viewResponse().position.y(135, longTransition)
-  );
-  yield* waitFor(longTransition);
-
-  // dispatch to renderer
-  yield* chain(
-    viewRenderer().opacity(1, shortTransition),
-    viewResponse().position(new Vector2(80, 250), longTransition),
-    heroRequest().position(new Vector2(350, 250), longTransition)
-  );
   yield* waitFor(shortTransition);
   yield* all(
-    heroRequest().position.x(430, longTransition),
-    viewResponse().position.x(0, longTransition),
-    viewResponse().fill('#8e8372', longTransition)
+    heroPosition(controller().absolutePosition().addY(20), longTransition),
+    heroConnection.restore(longTransition)
   );
-  yield* all(
-    heroRequest().opacity(0, shortTransition),
-    waitFor(longTransition)
-  );
+  yield* waitFor(shortTransition);
+
 
   // send response
-  yield* all(
-    viewResponse().absolutePosition(dispatcher().absolutePosition, longTransition),
-    viewResponse().position.y(80, longTransition)
-  );
+  yield* heroPosition(dispatcher().absolutePosition().addY(40), longTransition);
   yield* waitFor(shortTransition);
 
   yield* chain(
@@ -374,12 +421,13 @@ export default makeScene2D(function* (view) {
     heroConnectionArrow().endArrow(false, 0),
     heroConnectionArrow().startArrow(true, 0),
     heroConnectionArrow().arrowSize(12, shortTransition),
-  );
-  yield* all(
-    viewResponse().size(0, longTransition),
-    viewResponseText().fontSize(0, longTransition),
+    );
+    yield* all(
+    heroThread.restore(longTransition),
+    heroRequest().size(0, longTransition),
+    heroRequest().absolutePosition(requests().absolutePosition, longTransition),
     connectionArrowSignal(0, longTransition)
-  )
+  );
 
 
 

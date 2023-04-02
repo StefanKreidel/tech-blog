@@ -3,22 +3,23 @@ import { Line, Rect, Txt} from '@motion-canvas/2d/lib/components';
 import {createRef, useScene} from '@motion-canvas/core/lib/utils';
 import {all, waitFor} from '@motion-canvas/core/lib/flow';
 import { Vector2 } from '@motion-canvas/core/lib/types';
-import "@motion-canvas/core/lib/types/Color"
 import { createSignal } from '@motion-canvas/core/lib/signals';
+
+import "@motion-canvas/core/lib/types/Color"
 
 export default makeScene2D(function* (view) {
   // project variables
-  const transition = useScene().variables.get('transitionSpeed', 1)();
-  const fastTransition = transition / 2;
-  
-  const springColor = useScene().variables.get('springColor', '#000000');
+  const longTransition = useScene().variables.get('transitionSpeed', 1)();
+  const shortTransition = longTransition / 2;
 
-  const freshRequestColor = useScene().variables.get('requestFresh', '#000000');
-  const intermediateRequestColor = useScene().variables.get('requestIntermediate', '#000000');
-  const oldRequestColor = useScene().variables.get('requestOld', '#000000');
-  const completeRequestColor = useScene().variables.get('requestComplete', '#000000');
+  const springColor = '#5caa22';
+
+  const freshRequestColor = '#e57d67'
+  const intermediateRequestColor = '#c24835'
+  const oldRequestColor = '#962f1b';
+  const completeRequestColor = '#46a33c'
   
-  const background = useScene().variables.get('background', '#000000');
+  const background = '#1f2934';
 
   // reusable styling
   const headingStyle = {
@@ -152,65 +153,69 @@ export default makeScene2D(function* (view) {
   );
 
   // requests get queued ------------------------------------------------------
-  yield* requestVisibility(1, transition);
+  yield* waitFor(longTransition);
+
+  yield* requestVisibility(1, longTransition);
 
   yield* all(
-    heroRequest().size(new Vector2(requestWidth, requestHeight), fastTransition),
-    heroRequest().radius(8, fastTransition)
+    heroRequest().size(new Vector2(requestWidth, requestHeight), shortTransition),
+    heroRequest().radius(8, shortTransition)
   );
   yield* all(
-    request1().size(new Vector2(requestWidth, requestHeight), fastTransition),
-    request1().radius(8, fastTransition),
-    heroRequest().fill(intermediateRequestColor, fastTransition)
+    request1().size(new Vector2(requestWidth, requestHeight), shortTransition),
+    request1().radius(8, shortTransition),
+    heroRequest().fill(intermediateRequestColor, shortTransition)
   );
   yield* all(
-    request2().size(new Vector2(requestWidth, requestHeight), fastTransition),
-    request2().radius(8, fastTransition),
-    heroRequest().fill(oldRequestColor, fastTransition),
-    request1().fill(intermediateRequestColor, fastTransition)
+    request2().size(new Vector2(requestWidth, requestHeight), shortTransition),
+    request2().radius(8, shortTransition),
+    heroRequest().fill(oldRequestColor, shortTransition),
+    request1().fill(intermediateRequestColor, shortTransition)
   );
 
-  yield* requestBox().opacity(1, fastTransition);
-  yield* waitFor(transition);
+  yield* requestBox().opacity(1, shortTransition);
+  yield* waitFor(longTransition);
 
   // process request ----------------------------------------------------------
-  yield* heroRequest().position(new Vector2(700, -(10 + requestHeight) * 2), transition);
-  yield* processingBox().opacity(1, fastTransition);
-  yield* waitFor(fastTransition);
+  yield* heroRequest().position(new Vector2(700, -(10 + requestHeight) * 2), longTransition);
+  yield* processingBox().opacity(1, shortTransition);
+  yield* waitFor(shortTransition);
 
-  yield* heroComplete().width(requestWidth / 3, fastTransition);
+  yield* heroComplete().width(requestWidth / 3, shortTransition);
 
-  yield* heroRequest().position.y(-(10 + requestHeight), fastTransition);
-  yield* heroComplete().width(requestWidth * 2/3, fastTransition);
+  yield* heroRequest().position.y(-(10 + requestHeight), shortTransition);
+  yield* heroComplete().width(requestWidth * 2/3, shortTransition);
 
-  yield* heroRequest().position.y(0, fastTransition);
-  yield* heroComplete().width(requestWidth, fastTransition);
+  yield* heroRequest().position.y(0, shortTransition);
+  yield* heroComplete().width(requestWidth, shortTransition);
 
-  yield* waitFor(transition);
+  yield* waitFor(longTransition);
 
   // send response ------------------------------------------------------------
-  yield* heroRequest().position(new Vector2(0, 200), transition);
+  yield* heroRequest().position(new Vector2(0, 200), longTransition);
 
   yield* all(
-    heroRequest().width(0, transition),
-    heroRequest().position.x(-requestWidth / 2, transition),
-    heroComplete().width(0, transition),
-    heroComplete().position.x(0, transition),
-    responseVisibility(1, transition)
+    heroRequest().width(0, longTransition),
+    heroRequest().position.x(-requestWidth / 2, longTransition),
+    heroComplete().width(0, longTransition),
+    heroComplete().position.x(0, longTransition),
+    responseVisibility(1, longTransition)
   );
 
-  yield* waitFor(transition);
+  yield* waitFor(longTransition);
 
   // update request queue -----------------------------------------------------
   yield* all(
-    request1().position.y(0, fastTransition),
-    request1().fill(oldRequestColor, fastTransition),
+    request1().position.y(0, shortTransition),
+    request1().fill(oldRequestColor, shortTransition),
   );
   yield* all(
-    request2().position.y(-(10 + requestHeight), fastTransition),
-    request2().fill(intermediateRequestColor, fastTransition)
+    request2().position.y(-(10 + requestHeight), shortTransition),
+    request2().fill(intermediateRequestColor, shortTransition)
   );
 
-  yield* waitFor(transition);
 
+
+
+  yield* waitFor(longTransition * 2);
 });

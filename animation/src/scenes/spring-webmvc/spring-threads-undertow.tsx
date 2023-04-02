@@ -48,18 +48,19 @@ export default makeScene2D(function* (view) {
     radius: 8,
     fill: requestColor
   }
-  const threadStyle = {
+  const ioStyle = {
     width: 90,
     height: 50,
     lineWidth: 5,
     radius: 4,
     stroke: '#7a858f'
   }
-  const modelViewStyle = {
-    width: 160,
-    height: 80,
-    radius: 8,
-    fill: 'black'
+  const workerThreadStyle = {
+    width: 90,
+    height: 50,
+    lineWidth: 5,
+    radius: 4,
+    stroke: '#7c7394'
   }
   const arrowStyle = {
     lineWidth: 3,
@@ -81,12 +82,14 @@ export default makeScene2D(function* (view) {
   const connectionsText = createRef<Txt>();
   const requests = createRef<Rect>();
   const requestsText = createRef<Txt>();
-  const threadPoolExecutor = createRef<Rect>();
+  const ioThreadPool = createRef<Rect>();
+  const workerThreadPool = createRef<Rect>();
   const userService = createRef<Rect>();
   const greetService = createRef<Rect>();
   const database = createRef<Icon>();
   const databaseArrow = createRef<Line>();
-  const threads: Rect[] = [];
+  const ioThreads: Rect[] = [];
+  const workerThreads: Rect[] = [];
 
   // signals
   const connectionArrowSignal = createSignal(0);
@@ -150,7 +153,7 @@ export default makeScene2D(function* (view) {
         x={-370}
         y={40}
       >
-        <Txt text={'Tomcat'} y={-250} {...heading2Style} fill={undertowColor} fontSize={40} fontWeight={700} />
+        <Txt text={'Undertow'} y={-250} {...heading2Style} fill={undertowColor} fontSize={40} fontWeight={700} />
 
         {/* Connections and requests */}
         <Rect
@@ -230,22 +233,40 @@ export default makeScene2D(function* (view) {
         <Txt {...heading2Style} textAlign='center' y={-25} fill={'#8e8372'} text='GreetService' />
       </Rect>
 
-      {/* ThreadPoolExecutor */}
+      {/* Thread Pools */}
       <Rect
-        ref={threadPoolExecutor}
+        ref={ioThreadPool}
         width={350}
         height={200}
         lineWidth={5}
         stroke={'#7a858f'}
         radius={16}
-        x={100}
+        x={90}
         y={200}
       >
-        <Txt {...heading2Style} textAlign='center' y={-50} fill={'#7a858f'} text='ThreadPoolExecutor' />
+        <Txt {...heading2Style} textAlign='center' y={-50} fill={'#7a858f'} text='I/O ThreadPool' />
         <Txt {...heading2Style} x={-150} y={30} text={'['} />
-        <Rect {...threadStyle} x={-80} y={30} ref={makeRef(threads, 0)} />
+        <Rect {...ioStyle} x={-80} y={30} ref={makeRef(ioThreads, 0)} />
         <Txt {...heading2Style} y={30} text={'...'} />
-        <Rect {...threadStyle} x={80} y={30} ref={makeRef(threads, 1)} />
+        <Rect {...ioStyle} x={80} y={30} ref={makeRef(ioThreads, 1)} />
+        <Txt {...heading2Style} x={150} y={30} text={']'} />
+      </Rect>
+
+      <Rect
+        ref={workerThreadPool}
+        width={350}
+        height={200}
+        lineWidth={5}
+        stroke={'#7c7394'}
+        radius={16}
+        x={460}
+        y={200}
+      >
+        <Txt {...heading2Style} textAlign='center' y={-50} fill={'#7c7394'} text='Worker ThreadPool' />
+        <Txt {...heading2Style} x={-150} y={30} text={'['} />
+        <Rect {...workerThreadStyle} x={-80} y={30} ref={makeRef(workerThreads, 0)} />
+        <Txt {...heading2Style} y={30} text={'...'} />
+        <Rect {...workerThreadStyle} x={80} y={30} ref={makeRef(workerThreads, 1)} />
         <Txt {...heading2Style} x={150} y={30} text={']'} />
       </Rect>
 
@@ -275,7 +296,8 @@ export default makeScene2D(function* (view) {
   );
 
   // animation setup
-  threads.forEach(thread => thread.save());
+  ioThreads.forEach(thread => thread.save());
+  workerThreads.forEach(thread => thread.save());
 
   connections().save();
   connectionsText().save();
@@ -298,9 +320,12 @@ export default makeScene2D(function* (view) {
     userService().opacity(0, 0),
     greetService().opacity(0, 0),
     database().opacity(0, 0),
-    threads[0].lineWidth(0, 0),
-    threads[1].lineWidth(0, 0),
-    threadPoolExecutor().opacity(0, 0)
+    ioThreads[0].lineWidth(0, 0),
+    ioThreads[1].lineWidth(0, 0),
+    ioThreadPool().opacity(0, 0),
+    workerThreads[0].lineWidth(0, 0),
+    workerThreads[1].lineWidth(0, 0),
+    workerThreadPool().opacity(0, 0)
   );
 
   yield* waitFor(longTransition);
@@ -323,16 +348,19 @@ export default makeScene2D(function* (view) {
 
   yield* controller().opacity(1, shortTransition);
   yield* chain(
-    threadPoolExecutor().opacity(1, shortTransition),
-    threads[0].restore(shortTransition),
-    threads[1].restore(shortTransition)
+    ioThreadPool().opacity(1, shortTransition),
+    workerThreadPool().opacity(1, shortTransition),
+    ioThreads[0].restore(shortTransition),
+    ioThreads[1].restore(shortTransition),
+    workerThreads[0].restore(shortTransition),
+    workerThreads[1].restore(shortTransition)
   );
 
   yield* waitFor(longTransition);
 
 
   // thread handles request
-  const heroThread = threads[0];
+  const heroThread = ioThreads[0];
   heroThread.save();
   heroPosition(dispatcher().absolutePosition().addY(40));
   yield* all(
@@ -355,7 +383,13 @@ export default makeScene2D(function* (view) {
 
 
   // process at user service
+  workerThreads[0].save();
   yield* heroPosition(userService().absolutePosition().addY(20), longTransition);
+  yield* all(
+    heroThread.restore(longTransition),
+    workerThreads[0].absolutePosition(heroPosition, longTransition)
+  );
+  heroThread.save();
   yield* all(
     requestWaiting().restore(shortTransition),
     databaseArrowSignal(1, shortTransition)
@@ -371,8 +405,10 @@ export default makeScene2D(function* (view) {
     databaseArrow().arrowSize(12, shortTransition),
   );
   yield* all(
-    requestWaiting().size(0, shortTransition),
-    databaseArrowSignal(0, shortTransition)
+    requestWaiting().size(0, longTransition),
+    databaseArrowSignal(0, longTransition),
+    workerThreads[0].restore(longTransition),
+    heroThread.absolutePosition(heroPosition, longTransition)
   );
 
   yield* waitFor(shortTransition);
@@ -407,6 +443,7 @@ export default makeScene2D(function* (view) {
     yield* all(
     heroThread.restore(longTransition),
     heroRequest().size(0, longTransition),
+    heroRequest().absolutePosition(requests().absolutePosition, longTransition),
     connectionArrowSignal(0, longTransition)
   );
 

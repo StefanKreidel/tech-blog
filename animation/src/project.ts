@@ -1,19 +1,21 @@
 import {makeProject} from '@motion-canvas/core';
 
-import example from './scenes/example?scene';
-import springLifecycleBasic from './scenes/spring-lifecycle-basic?scene'
-import springWithServletContainer from './scenes/spring-with-servlet-container?scene'
-import springModelViewController from './scenes/spring-model-view-controller?scene'
-import springThreads from './scenes/spring-threads?scene'
+import springLifecycleBasic from './scenes/spring-webmvc/spring-lifecycle-basic?scene'
+import springWithServletContainer from './scenes/spring-webmvc/spring-with-servlet-container?scene'
+import springModelViewController from './scenes/spring-webmvc/spring-model-view-controller?scene'
+import springThreads from './scenes/spring-webmvc/spring-threads?scene'
+import springThreadsUndertow from './scenes/spring-webmvc/spring-threads-undertow?scene'
+import springRestTemplate from './scenes/spring-webmvc/spring-rest-template?scene'
 
 import './global.css';
 
 export default makeProject({
   scenes: [
-    // example,
     // springLifecycleBasic,
     // springWithServletContainer,
     // springModelViewController,
-    springThreads
+    // springThreads,
+    // springThreadsUndertow,
+    springRestTemplate,
   ]
 });

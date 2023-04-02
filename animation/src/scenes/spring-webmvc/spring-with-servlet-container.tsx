@@ -3,8 +3,9 @@ import { Line, Rect, Txt, Shape, Circle } from '@motion-canvas/2d/lib/components
 import { createRef, makeRef, useScene } from '@motion-canvas/core/lib/utils';
 import { all, chain, waitFor } from '@motion-canvas/core/lib/flow';
 import { Vector2 } from '@motion-canvas/core/lib/types';
-import "@motion-canvas/core/lib/types/Color"
 import { createSignal, SimpleSignal } from '@motion-canvas/core/lib/signals';
+
+import "@motion-canvas/core/lib/types/Color"
 
 export default makeScene2D(function* (view) {
   // project variables
@@ -232,6 +233,7 @@ export default makeScene2D(function* (view) {
         stroke={'#4a8e6a'}
         radius={16}
         x={430}
+        y={40}
       >
         <Txt {...heading2Style} textAlign='center' y={-70} fill={'#4a8e6a'} text='Business Logic
         Processing' />
@@ -300,8 +302,8 @@ export default makeScene2D(function* (view) {
 
   yield* chain(
     waitFor(shortTransition),
-    dispatcher().opacity(1, longTransition),
-    processor().opacity(1, longTransition),
+    dispatcher().opacity(1, shortTransition),
+    processor().opacity(1, shortTransition),
     waitFor(shortTransition)
   )
 
@@ -312,18 +314,14 @@ export default makeScene2D(function* (view) {
     heroRequest.fill('#da7e71', shortTransition),
     waitFor(shortTransition),
     all(
-      heroRequest.absolutePosition(dispatcher().absolutePosition, shortTransition),
-      heroRequest.position.y(50, shortTransition),
-      requestArrowSignals[1](0, shortTransition)
+      heroRequest.absolutePosition(dispatcher().absolutePosition().addY(50), longTransition),
+      requestArrowSignals[1](0, longTransition)
     ),
     waitFor(shortTransition)
   )
 
   // process single request
-  yield* all(
-    heroRequest.absolutePosition(processor().absolutePosition, shortTransition),
-    heroRequest.position.y(15, shortTransition)
-  );
+  yield* heroRequest.absolutePosition(processor().absolutePosition().addY(50), longTransition);
 
   yield heroRequest.fill('#46a33c', longTransition * 3);
   for (let i=1; i<4; i++) {
@@ -334,6 +332,8 @@ export default makeScene2D(function* (view) {
 
 
   // send response
+  yield* heroRequest.absolutePosition(dispatcher().absolutePosition().addY(50), longTransition);
+  yield* waitFor(shortTransition);
   yield* heroRequest.absolutePosition(connections[1].absolutePosition, longTransition);
   yield* waitFor(shortTransition);
 
