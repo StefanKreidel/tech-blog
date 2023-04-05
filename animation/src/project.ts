@@ -6,6 +6,7 @@ import springModelViewController from './scenes/spring-webmvc/spring-model-view-
 import springThreads from './scenes/spring-webmvc/spring-threads?scene'
 import springThreadsUndertow from './scenes/spring-webmvc/spring-threads-undertow?scene'
 import springRestTemplate from './scenes/spring-webmvc/spring-rest-template?scene'
+import springWebClient from './scenes/spring-webmvc/spring-web-client?scene'
 
 import './global.css';
 
@@ -16,6 +17,7 @@ export default makeProject({
     // springModelViewController,
     // springThreads,
     // springThreadsUndertow,
-    springRestTemplate,
+    // springRestTemplate,
+    springWebClient
   ]
 });

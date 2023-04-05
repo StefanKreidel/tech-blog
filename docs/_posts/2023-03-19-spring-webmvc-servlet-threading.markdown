@@ -72,9 +72,9 @@ This tells us that managing incoming connections and requests is not done by Spr
 
 <motion-canvas-player
     src="{{ '/js/animation/spring-webmvc/spring-servlet-container.js' | prepend: site.baseurl }}">
-</motion-canvas-player >
+</motion-canvas-player>
 
-Upon startup, SpringBoot (amongst other things) starts the embedded servlet container. By default this will be Tomcat but it can easily be replaced with e.g. Undertow by configuring the dependencies accordingly:
+Upon startup, SpringBoot (amongst other things) starts the embedded servlet container. By default this will be Tomcat but it can easily be replaced with e.g. Jetty by configuring the dependencies accordingly:
 
 ```groovy
 // build.gradle.kts
@@ -82,7 +82,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-web") {
     exclude(module="spring-boot-starter-tomcat")
   }
-  implementation("org.springframework.boot:spring-boot-starter-undertow")
+  implementation("org.springframework.boot:spring-boot-starter-jetty")
 }
 ```
 
@@ -102,7 +102,7 @@ Now that we have an understanding of how incoming requests are handled and proce
 
 <motion-canvas-player 
     src="{{ '/js/animation/spring-webmvc/spring-mvc.js' | prepend: site.baseurl }}">
-</motion-canvas-player >
+</motion-canvas-player>
 
 This might not look familiar if you have only ever implemented REST APIs. Spring Web MVC implements three integral parts:
 - The _**C**ontroller_ which executes our business logic and returns the response in form of a _**M**odel_. The latter is different form nowadays somewhat classical JSON payloads.
@@ -121,7 +121,7 @@ This is high-level explanation and will be explained in more detail in an upcomi
 
 <motion-canvas-player 
     src="{{ '/js/animation/spring-webmvc/spring-threads.js' | prepend: site.baseurl }}">
-</motion-canvas-player >
+</motion-canvas-player>
 
 The animation visualizes how a request is handled by one thread exactly. Two operations occur which keep the thread busy. The first is a database access. Our thread initiates the communication and then waits to be notified by the database adapter that the response is available. During this time, the thread has nothing else to do and can only wait.
 
@@ -137,19 +137,24 @@ Furthermore, this example also visualizes another phenomenon. As soon as all thr
 
 #### Undertow is a Little Different
 
-So far we treated all three servlet containers to be equal for the sake of simplicity but this is not actually true. I already mentioned that Undertow does **not** have a request queue which holds requests when no threads are available.
-
 Instead of a request queue, [undertow has two separate thread pools](https://undertow.io/undertow-docs/undertow-docs-2.1.0/index.html#xnio-workers): one for *I/O threads* and one for *core threads* (called worker threads by Spring). Contrary to their names, **IO threads** are used to **perform non-blocking, compute tasks** (e.g. executing the actual business logic) whereas **core threads are used for blocking tasks** (e.g. database access or outgoing servlet requests).
 
 Before calling a blocking operation, the execution context is handed over to a core thread. This means that the IO thread is now able to process different tasks such as accepting a new incoming request. As soon as the blocking operation is complete, Undertow's main worker instance (called the XNIO Worker) is informed and a free IO thread picks up the work.
 
 <motion-canvas-player 
     src="{{ '/js/animation/spring-webmvc/spring-threads-undertow.js' | prepend: site.baseurl }}">
-</motion-canvas-player >
+</motion-canvas-player>
 
-This way, Undertow manages to optimize the problem described in the prior paragraph: that we introduce back-pressure and increase response times as soon as all main threads are "busy" waiting for blocking tasks. But for IO and core threads to work together effectively, a fine-tuned value for the number of core threads is required. It is hard to have a good default here as it is heavily dependent on the applications workload.
+This way of switching threads for blocking tasks can improve the responsiveness and resource utilization of our application. If all requests require the same amount of blocking operations, then this will not improve things at all. Compared to Tomcat, we just increased the number of threads and split them in two groups. If however our application processes multiple different types of requests with some needing a lot of compute steps while others rely on many blocking operations, then the pools can be used efficiently.
 
-The IO and core threads can be configured via the `server.undertow.threads.io` and `server.undertow.threads.worker` properties respectively (remember, Spring calls undertow core threads *worker threads*). The default for the latter is 8 times the number of IO threads.
+Moving blocking operations to core threads keeps the IO threads free to process requests which need more compute steps. If we reach the core-thread-pool limit, only the requests with lots of blocking operations will slow down, the compute intense ones can still be processed (although this has its limits as well).
+
+The IO and core threads can be configured via the `server.undertow.threads.io` and `server.undertow.threads.worker` properties respectively (remember, Spring calls undertow core threads *worker threads*).
+
+| Property | Default |
+| -------- | ------- |
+| `server.undertow.threads.io` | Twice the number of available processors. |
+| `server.undertow.threads.worker` | 8 times the number of IO threads. |
 
 ## 5. Blocking Tasks and Outgoing Requests
 
@@ -158,7 +163,7 @@ So far we only briefly touched on the topic of blocking tasks. Multiple operatio
 - Accessing a database. This is done via a database-specific interface driver (e.g. JDBC driver) and in many cases is also implemented in a blocking way. Newer, non-blocking drivers exist but more on them in another post.
 - File system access. Here we rely on APIs provided by the operating system and, you guessed it, they are also mostly blocking.
 
-In all of these examples, we leave the Spring context via an adapter or interface and our main thread (or Undertow core thread) waits for a response.
+In all of these examples, we leave the Spring context via an adapter or interface and our main thread (or Undertow core thread) waits for a response. [test](#spring-rest-template)
 
 #### Spring REST Template
 
@@ -168,7 +173,7 @@ For now we stick with the RestTemplate however as this post is centered around S
 
 <motion-canvas-player 
     src="{{ '/js/animation/spring-webmvc/spring-rest-template.js' | prepend: site.baseurl }}">
-</motion-canvas-player >
+</motion-canvas-player>
 
 The animation shows how our Spring RestTemplate uses a `HTTPConnection` from a pool of connections to make HTTP requests. This is the SpringBoot default but can also be done differently.
 
@@ -224,51 +229,12 @@ Under the hood, this RestTemplate will use a `PoolingHttpClientConnectionManager
 Therefore, no matter which servlet container you choose, you have to make sure that you configure the connection pool properly.
 
 
-#### Spring WebClient
+#### A Word on Spring WebClient
 
-As mentioned before, RestTemplate is already in maintenance mode and Spring recommends using `WebClient` instead. The latter is part of Spring Webflux and therefore non-blocking. So why should we use WebClient for Spring Web applications then?
+As mentioned before, RestTemplate is already in maintenance mode and [Spring recommends](https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#rest-resttemplate) using `WebClient` instead. The latter is part of Spring Webflux and therefore non-blocking. So why and how should we use WebClient for Spring Web applications then?
 
-From a technical point of view there is no clear benefit unless you plan to migrate your legacy application to a reactive stack over time. But all new HTTPClient features will only be added to WebClient and not to RestTemplate anymore. Therefore, WebClient is more future proof.
+The answer to this is [just one click away]({{ site.baseurl }}{% post_url 2023-04-04-spring-webmvc-with-webclient %}) in another post!
 
-Implementing this is also straight forward but might not look intuitive at first.
-
-```groovy
-// build.gradle.kts
-dependencies {
-  implementation("org.springframework.boot:spring-boot-starter-web")
-  implementation("org.springframework.boot:spring-boot-starter-webflux")
-}
-```
-
-You simply have to add both, Web and Webflux as dependencies. This will start Spring in the "classic" Web MVC stack with Tomcat as servlet container as we discussed in this post but will also provide features from Webflux like `WebClient`. Just like with RestTemplate, there is no auto-configured WebClient bean provided by default. A minimal configuration to create one can look as follows:
-
-```java
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.reactive.function.client.WebClient;
-
-@Configuration
-public class WebClientConfiguration {
-
-    @Bean
-    public WebClient webClient() {
-        return WebClient.create();
-    }
-
-}
-```
-
-Also just like with RestTemplate, [WebClient requires an actual Http client library](https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#webflux-client). Built-in support exists for:
-- [Reactor Netty](https://github.com/reactor/reactor-netty)
-- [Jetty Reactive HttpClient](https://github.com/jetty-project/jetty-reactive-httpclient)
-- [JDK HttpClient](https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpClient.html)
-- [Apache HttpComponents](https://hc.apache.org/index.html)
-
-The main difference to RestTemplate's supported libraries is that OkHttp is not supported in favour of Jetty's Reactive HttpClient.
-
-The final thing to keep in mind when using Spring Web MVC with Webflux's WebClient is that resources for incoming and outgoing requests can not be shared. Even if the same library is used (e.g. Jetty Servlet Container and Jetty Reactive HttpClient), the server part will not be reactive and will therefore use blocking servlets while the client is reactive. Therefore, threads and connection pools cannot be used for both.
-
-If you are running on a fully non-blocking, reactive stack, resource sharing is possible. So watch out fo that blog post.
 
 ## 6. What about Netty
 
