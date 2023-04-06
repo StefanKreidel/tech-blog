@@ -24,7 +24,7 @@ layout: default
   
     {%if page.image %}
     <div class="page-image">
-      <img class="lazy" data-src="{{site.baseurl}}{{page.image}}" alt="{{page.title}}">
+      <img class="lazy" data-src="{{page.image}}" alt="{{page.title}}">
     </div>
     {% endif %}
   
@@ -44,3 +44,27 @@ layout: default
 
 </div>
 <!-- end page -->
+
+<section class="author">
+  <div class="container">
+  
+    <div class="author__info">
+      {% if page.location %}
+        <span class="author__social__item"><i class="ion ion-md-pin"></i> {{ page.location }}</span>
+      {% endif %}
+      {% if page.website %}
+        <a class="author__social__item" href="{{ page.website }}" aria-label="Website link"><i class="ion ion-ios-link"></i> Website</a>
+      {% endif %}
+      {% if page.github %}
+        <a class="author__social__item" href="{{ page.github }}" aria-label="GitHub link"><i class="ion ion-logo-github"></i> GitHub</a>
+      {% endif %}
+      {% if page.linkedin %}
+        <a class="author__social__item" href="{{ page.linkedin }}" aria-label="LinkedIn link"><i class="ion ion-logo-linkedin"></i> LinkedIn</a>
+      {% endif %}
+      {% if page.instagram %}
+        <a class="author__social__item" href="{{ page.instagram }}" aria-label="Instagram link"><i class="ion ion-logo-instagram"></i> Instagram</a>
+      {% endif %}
+    </div>
+  
+  </div>
+</section>

@@ -5,7 +5,7 @@ date:   2023-04-03 20:29:35 +0100
 author: stefan
 image:  'https://i.imgur.com/l2QPLfV.jpg'
 featured: true
-tags:   [spring, webmvc]
+tags:   [Spring, WebMVC]
 tags_color: '#5caa22'
 ---
 

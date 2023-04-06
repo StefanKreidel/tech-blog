@@ -1,28 +1,21 @@
 ---
 layout: page
-title: About
+title: About Me and this Blog
 permalink: /about/
-image: '/images/102.jpg'
+image: 'https://i.imgur.com/7Z7j1uW.jpg'
+website: https://github.com/StefanKreidel
+github: https://github.com/StefanKreidel
+linkedin: https://www.linkedin.com/in/stefan-kreidel-838b87169/
 ---
 
-In operant conditioning, a reinforcement (by reward) or instead a punishment is given after a given behavior, changing the frequency and/or form of that behavior. Stimulus present when the behavior/consequence occurs come to control these behavior modifications.
+My name is Stefan Kreidel and I am a Software Engineer and Architect located im Germany. Even though I still live in the city I was born in, I enjoy visiting new places (preferably far away) whenever I find the time and, let's be real, money for it.
 
-> Sing like no one’s listening, love like you’ve never been hurt, dance like nobody’s watching, and live like it’s heaven on earth.
+I am a full-time engineer with lots of different interests outside of my typical backend domain, like operations, automation, SEO, frontend performance and, as of recently, blogging.
 
-Observational learning is learning that occurs through observing the behavior of others. It is a form of social learning which takes various forms, based on various processes. In humans, this form of learning seems to not need reinforcement to occur, but instead, requires a social model such as a parent, sibling, friend, or teacher with surroundings.
+After working as a backend engineer at Mercedes for a couple of years, I got more and more invested in cross-team software design and architecture back in early 2022. After investing some of my spare work-time into this topic, I decided to take it up more seriously by taking over a position as system architect and, more or less at the same time, co-founding a department wide software architecture circle.
 
-<div class="gallery-box">
-  <div class="gallery">
-    <img src="/images/103.jpg" loading="lazy">
-    <img src="/images/104.jpg" loading="lazy">
-  </div>
-  <em>Gallery / <a href="https://unsplash.com/" target="_blank">Unsplash</a></em>
-</div>
+Turns out that the skills I need at this job are still more or less the same as before but the cost of error can be far greater if you are thinking about department wide changes. So back to the drawing board it was...
 
-Nonformal learning is organized learning outside the formal learning system. For example, learning by coming together with people with similar interests and exchanging viewpoints, in clubs or in (international) youth organizations, workshops.
+Hour long research, day and night, caused me to question some of the things I thought I knew but also to deepen my knowledge in topics I had done right intuitively. *How do some things that are obvious work internally? Is that really the best way to do it? I wished I knew what this does under the hood to start optimizing...* Those are the questions and topics that motivated me. Turns out, I could still learn a lot. Especially in the areas which are not covered by every other blog or tutorial site out there.
 
-Informal learning is less structured than "nonformal" one. It may occur through the experience of day-to-day situations (for example, one would learn to look ahead while walking because of the danger inherent in not paying attention to where one is going). It is learning from life, during a meal at the table with parents, play, exploring, etc.
-
-<p><iframe src="https://player.vimeo.com/video/148003889?h=d36b8b4cbb" loading="lazy" width="640" height="360" frameborder="0" allowfullscreen></iframe></p>
-
-The educational system may use a combination of formal, informal, and nonformal learning methods. The UN and EU recognize these different forms of learning (cf. links below). In some schools, students can get points that count in the formal-learning systems if they get work done in informal-learning circuits. They may be given time to assist international youth workshops and training courses, on the condition they prepare, contribute, share, and can prove this offered valuable new insight, helped to acquire new skills, a place to experience.
+I decided to write down the things that were very difficult for me to grasp at first and explain or visualize them in a way that makes it fun and easy to learn. This will certainly help me in the future (of course I forget stuff as well) and hopefully give you one or two bits of useful information as well. Let me know what you think or get connection on social media, if you would like to follow along!

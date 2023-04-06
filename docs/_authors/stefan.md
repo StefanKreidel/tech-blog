@@ -13,4 +13,4 @@ I have 11 years of experience in software engineering, design, architecture and 
 
 Recently, I took over a position as software architect which caused me to question many of the patterns I "got used to" over the years. This led to many evenings and weekends doing research.
 
-This blog is the result of me learning new things every day. Feel free to join me on on this adventure.
+So why am I writing this blog?

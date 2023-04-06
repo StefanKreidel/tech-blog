@@ -14,16 +14,20 @@ menu__settings:
       url: '/'
     - title: 'Blog'
       url: '/blog/'
-    - title: 'Authors'
-      url: '/authors/'
+    - url: '/about/'
+      title: 'About'
+    # - url: '/contact/'
+    #   title: 'Contact'
+    # - title: 'Authors'
+    #   url: '/authors/'
     # - title: 'Videos'
     #   url: '/videos/'
-    - title: 'Pages'
-      submenu:
-      - url: '/about/'
-        title: 'About'
-      - url: '/contact/'
-        title: 'Contact'
+    # - title: 'Pages'
+    #   submenu:
+    #   - url: '/about/'
+    #     title: 'About'
+    #   - url: '/contact/'
+    #     title: 'Contact'
 
 
 #-------------------------------
@@ -70,10 +74,10 @@ tag__settings:
 # Author Section Settings
 author__section:
   enable: true
-  author__section__title: Hello, my name is Stefan. I am a software architect with a passion for pragmatic and effective solutions.
+  author__section__title: Hello, I am Stefan Kreidel.
   author__section__description: I'm a software engineer and architect eager to understand the inner workings of tools and frameworks I use everyday. I write this blog to document each learning for myself, to teach myself how to break down difficult to grasp topics and to give you an alternative to doing hour-long research yourself.
-  aurhor__section__button__text: More About Me
-  aurhor__section__button__link: /about
+  author__section__button__text: More About Me
+  author__section__button__link: /about
   author__section__big__image: https://i.imgur.com/6LAn48D.jpg
   author__section__small__image:
 
@@ -109,10 +113,12 @@ footer__menu__settings:
   menu__items:
     - title: 'Home'
       url: '/'
+    - title: 'Blog'
+      url: '/blog/'
     - title: 'About'
       url: '/about/'
-    - title: 'Contact'
-      url: '/contact/'
+    # - title: 'Contact'
+    #   url: '/contact/'
 
 
 #-------------------------------

@@ -349,6 +349,15 @@
   border-radius: 8px;
   background: var(--background-alt-color);
 
+  a {
+    text-decoration: underline;
+    text-decoration-color: transparent;
+
+    &:hover {
+      text-decoration-color: var(--link-color-hover);
+    }
+  }
+
   .card-author__image {
     position: relative;
     transform: translate(0);

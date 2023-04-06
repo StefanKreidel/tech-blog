@@ -5,7 +5,7 @@ date:   2023-03-19 13:30:35 +0100
 author: stefan
 image:  'https://i.imgur.com/etilIS6.jpg'
 featured: true
-tags:   [spring, webmvc]
+tags:   [Spring, WebMVC]
 tags_color: '#5caa22'
 ---
 

@@ -123,6 +123,15 @@
       margin: 0 auto 20px;
       font-size: 21px;
     }
+
+    a {
+      border-bottom: 1px solid var(--link-color);
+  
+      &:hover {
+        color: var(--brand-color);
+        border-bottom-color: var(--brand-color);
+      }
+    }
   }
 
   .author__image {
