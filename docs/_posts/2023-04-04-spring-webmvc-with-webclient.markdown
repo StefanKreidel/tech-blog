@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  'Spring Web MVC + WebClient: How they work together'
+title:  'Spring Web MVC + WebClient: How they work Together'
 date:   2023-04-03 20:29:35 +0100
 author: stefan
 image:  'https://i.imgur.com/l2QPLfV.jpg'
@@ -9,9 +9,9 @@ tags:   [spring, webmvc]
 tags_color: '#5caa22'
 ---
 
-Spring Web MVC runs on a blocking stack, following the *one thread per request* philosophy. I have already written a [detailed post]({{ site.baseurl }}{% post_url 2023-03-19-spring-webmvc-servlet-threading %}) which visualizes the inner workings and threading model of Spring Web with the help of step-by-step animations.
+Spring Web MVC runs on a blocking stack, following the *one thread per request* philosophy. I have already written a detailed post which visualizes the inner workings and threading model of Spring Web with the help of step-by-step animations. Feel free to [check it out]({{ site.baseurl }}{% post_url 2023-03-19-spring-webmvc-servlet-threading %}) if you want to find out more.
 
-In the old days before Spring Webflux this meant that IO requests (like REST calls) where also blocking and handled by the same thread which processed all the request relevant compute steps. This was done by using Spring's `RestTemplate`, which is now in [maintenance mode](https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#rest-resttemplate) and, to quote the Spring docs:
+In the old days before Spring Webflux this meant that IO requests (like REST calls) where also blocking and handled by the same thread which processed all the request relevant compute steps. This was done by using Spring's [RestTemplate](https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#rest-resttemplate), which is now in [maintenance mode](https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#rest-resttemplate) and, to quote the Spring docs:
 
 > with only requests for minor changes and bugs to be accepted. Please, consider using the WebClient instead.
 
@@ -56,6 +56,16 @@ Now let's have a look at how things are different if we use WebClient instead:
     src="{{ '/js/animation/spring-webmvc/spring-web-client.js' | prepend: site.baseurl }}">
 </motion-canvas-player>
 
+At first, everything looks similar to the RestTemplate animation from before, as it should. We are still running on Web MVC so `DispatcherServlet`, `ThreadPoolExecutor` and the `Controller` bean still exist. However, as soon as the first request comes in and is handled by one of our main threads, the differences start to appear.
+
+Firstly, we now use a `WebClient` bean of course. Instead of WebClient using HTTP connections directly, we now have an `EventLoop Group`, where each EventLoop handles outgoing connections as a, you guessed it, loop of events.
+
+Our controller requests some external resource to be loaded from GitHub via the WebClient. The main processing thread first steps into WebClient and executes some steps prior to sending the request, such as generating HTTP headers or providing authentication. Now the actual HTTP connection is initiated to an EventLoop. Their inner workings deserve a post themselves, so watch out for that. For now, the important part is that **the connection is being initiated, the request is sent, a response callback handler is registered and then the EventLoop is finished**. It is now able to process other things and therefore "returns" to the group.
+
+GitHub now processes the request and sends a response after a short while, visualized by the orange circle. For the sake of simplicity it appears "in the WebClient" although this is handled differently under the hood. The HTTP connection receives a response and triggers the aforementioned callback. A response task is created and put into the `ScheduledTaskQueue`. This TaskQueue is bound to the EventLoop Group which causes one of the free EventLoops to pick the task up. In our minimal example, task just requires the received response to be handed over to our original calling request. 
+
+You probably noticed that this request has been waiting patiently the entire time. Because of this, our application is still inherently blocking even though we used non-blocking mechanisms to handle outgoing HTTP communication.
+
 
 ## 2. Example Setup
 
@@ -79,7 +89,7 @@ dependencies {
 }
 ```
 
-You simply have to add both, Web and Webflux as dependencies. This will start Spring in the "classic" Web MVC stack with Tomcat as servlet container as we discussed in the [dedicated Web MVC post]({{ site.baseurl }}{% post_url 2023-03-19-spring-webmvc-servlet-threading %}#spring-rest-template ). At the same time, this will also provide features from Webflux like `WebClient`. Just like with RestTemplate, there is no auto-configured WebClient bean provided by default. A minimal configuration to create one can look as follows:
+You simply have to add both, Web and Webflux as dependencies. This will start Spring in the "classic" Web MVC stack with Tomcat as servlet container as we discussed in the [dedicated Web MVC post]({{ site.baseurl }}{% post_url 2023-03-19-spring-webmvc-servlet-threading %}#spring-rest-template ). At the same time, this will also provide features from Webflux like `WebClient`. Just like with RestTemplate, there is **no auto-configured WebClient bean** provided by default. A minimal configuration to create one can look as follows:
 
 ```java
 import org.springframework.context.annotation.Bean;
@@ -103,7 +113,7 @@ Also just like with RestTemplate, [WebClient requires an actual Http client libr
 - [JDK HttpClient](https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpClient.html)
 - [Apache HttpComponents](https://hc.apache.org/index.html)
 
-The main difference to RestTemplate's supported libraries is that OkHttp is not supported in favour of Jetty's Reactive HttpClient.
+The main difference to RestTemplate's supported libraries is that **OkHttp is not supported** in favour of Jetty's Reactive HttpClient.
 
 By default, WebClient will use Reactor Netty's EventLoop based HTTP client implementation. But this can easily be changed to, for example, Jetty:
 
@@ -117,7 +127,7 @@ public WebClient webClient() {
 }
 ```
 
-The final thing to keep in mind when using Spring Web MVC with Webflux's WebClient is that resources for incoming and outgoing requests can not be shared. Even if the same library is used (e.g. Jetty Servlet Container and Jetty Reactive HttpClient), the server part will not be reactive and will therefore use blocking servlets while the client is reactive. Therefore, threads and connection pools cannot be used for both.
+The final thing to keep in mind when using Spring Web MVC with Webflux's WebClient is that **resources for incoming and outgoing requests can not be shared**. Even if the same library is used (e.g. Jetty Servlet Container and Jetty Reactive HttpClient), the server part will not be reactive and will therefore use blocking servlets while the client is reactive. Therefore, threads and connection pools cannot be used for both.
 
 If you are running on a fully non-blocking, reactive stack, resource sharing is possible. So watch out fo that blog post.
 

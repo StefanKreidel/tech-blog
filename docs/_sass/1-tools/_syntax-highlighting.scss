@@ -2,6 +2,13 @@
   Syntax Highlighting
 */
 
+.language-plaintext {
+  border-radius: 4px;
+  padding-inline-start: 4px;
+  padding-inline-end: 4px;
+  background: var(--syntax-highlighting-background);
+}
+
 .highlight {
   margin-bottom: 32px;
   border-radius: 8px;

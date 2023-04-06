@@ -433,8 +433,14 @@ export default makeScene2D(function* (view) {
     requestWaiting().rotation(0, 0),
     requestWaiting().rotation(360, longTransition * 2),
     requestWaiting().rotation(0, 0),
+    requestWaiting().rotation(360, longTransition * 2),
+    requestWaiting().rotation(0, 0),
   );
-  yield* waitFor(longTransition);
+  yield* chain(
+    githubApiArrow().arrowSize(0, shortTransition),
+    githubApiArrow().endArrow(false, 0)
+  );
+  yield* waitFor(longTransition * 3);
   yield all(
     eventLoops[0].restore(0),
     eventLoops[1].restore(0),
@@ -443,8 +449,6 @@ export default makeScene2D(function* (view) {
 
   // response comes in
   yield* chain(
-    githubApiArrow().arrowSize(0, shortTransition),
-    githubApiArrow().endArrow(false, 0),
     githubApiArrow().startArrow(true, 0),
     githubApiArrow().arrowSize(12, shortTransition),
   );

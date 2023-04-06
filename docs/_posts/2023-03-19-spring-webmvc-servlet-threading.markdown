@@ -13,9 +13,7 @@ SpringBoot can be a very tricky thing to understand and use properly. At first g
 
 Spring Web MVC is definitely a prime example on how nitty and gritty the details can get. And while the classic MVC stack already seems kind of dated with all the hype reactive frameworks currently receive, it is still used widely.
 
-> The following post was written to the best of my knowledge. I summarize everything in a way that will be useful to myself in the future and hopefully to you right now. If I give suggestions, they are based on my personal experience and subject to change.
-
-With that out of the way, how does Spring MVC actually work on the inside? How does it handle threading? Where do servlet containers come into play? And how can you start optimizing when you reach the resource limit of an auto-configured application.
+But how does Spring MVC actually work on the inside? How does it handle threading? Where do servlet containers come into play? And how can you start optimizing when you reach the resource limit of an auto-configured application.
 
 ## 1. A common understanding of Requests and Processing
 
@@ -24,7 +22,7 @@ With that out of the way, how does Spring MVC actually work on the inside? How d
     auto="true">
 </motion-canvas-player>
 
-The above animation does two things really well: it introduces the terms `requests` and `processing` while completely ignoring how Spring actually works internally. This simplification is technically not wrong. Spring MVC does accept incoming requests, keeps them in a queue ready to be processed and upon completion answers the request by sending some kind of response the the client. But you already knew that. You are here because you want to understand how all of this is actually done and hidden by Spring.
+The above animation does two things really well: it introduces the terms `requests` and `processing` while completely ignoring how Spring actually works internally. **This simplification is technically not wrong**. Spring MVC does accept incoming requests, keeps them in a queue ready to be processed and upon completion answers the request by sending some kind of response the the client. But you already knew that. You are here because you want to understand how all of this is actually done and hidden by Spring.
 
 In the case of SpringBoot, it's lifecycle builds on a set of "magical" conventions which automatically configure, instantiate and manage all the beans and executors necessary for your application to run.
 
@@ -115,15 +113,15 @@ Moving on, we will not focus on the Model and View parts of MVC any longer and w
 
 ## 4. Spring Web: The Blocking Stack
 
-Spring Web is implemented around a blocking philosophy. This means that a single thread will process one specific request. Each compute step is executed on that thread and for each blocking I/O request (e.g. database call), the thread will idle and wait for the blocking operation to finish.
+**Spring Web is implemented around a blocking philosophy**. This means that a single thread will process one specific request. Each compute step is executed on that thread and for each blocking I/O request (e.g. database call), the thread will idle and wait for the blocking operation to finish.
 
-This is high-level explanation and will be explained in more detail in an upcoming post. For now, the important part is that regardless of the servlet container, we only have a finite pool of threads. As long as some are free, we can process new requests. As soon as all threads are busy, we introduce back-pressure. In the case of Tomcat or Jetty, we start filling the request queue. In the case of Undertow, we start denying new requests.
+This is high-level explanation and will be explained in more detail later. For now, the important part is that regardless of the servlet container, **we only have a finite pool of threads**. As long as some are free, we can process new requests. As soon as all threads are busy, we introduce back-pressure. In the case of Tomcat or Jetty, we start filling the request queue. In the case of Undertow, we start denying new requests.
 
 <motion-canvas-player 
     src="{{ '/js/animation/spring-webmvc/spring-threads.js' | prepend: site.baseurl }}">
 </motion-canvas-player>
 
-The animation visualizes how a request is handled by one thread exactly. Two operations occur which keep the thread busy. The first is a database access. Our thread initiates the communication and then waits to be notified by the database adapter that the response is available. During this time, the thread has nothing else to do and can only wait.
+The animation visualizes how a request is handled by one thread exactly. Two operations occur which keep the thread busy. The first is a **database access**. Our thread initiates the communication and then waits to be notified by the database adapter that the response is available. During this time, **the thread** has nothing else to do and **can only wait**.
 
 After the `UserService` finished loading data from the database, our code defines that further process steps have to be executed by the `GreetService`. This time the thread actually has to do some kind of computation. After some time we are ready to send our response and the thread is free to process new requests again.
 
@@ -159,15 +157,15 @@ The IO and core threads can be configured via the `server.undertow.threads.io` a
 ## 5. Blocking Tasks and Outgoing Requests
 
 So far we only briefly touched on the topic of blocking tasks. Multiple operations fall into this category, like:
-- Calling another service via its API. In most cases today this is done via a REST interface but other mechanisms exist. They all have in common that they rely on HTTP connections which are blocking by nature.
-- Accessing a database. This is done via a database-specific interface driver (e.g. JDBC driver) and in many cases is also implemented in a blocking way. Newer, non-blocking drivers exist but more on them in another post.
-- File system access. Here we rely on APIs provided by the operating system and, you guessed it, they are also mostly blocking.
+- **Calling another service** via its API. In most cases today this is done via a REST interface but other mechanisms exist. They all have in common that they rely on HTTP connections which are blocking by nature.
+- **Accessing a database**. This is done via a database-specific interface driver (e.g. JDBC driver) and in many cases is also implemented in a blocking way. Newer, non-blocking drivers exist but more on them in another post.
+- **File system access**. Here we rely on APIs provided by the operating system and, you guessed it, they are also mostly blocking.
 
-In all of these examples, we leave the Spring context via an adapter or interface and our main thread (or Undertow core thread) waits for a response. [test](#spring-rest-template)
+In all of these examples, we leave the Spring context via an adapter or interface and our main thread (or Undertow core thread) waits for a response.
 
 #### Spring REST Template
 
-`RestTemplate` provides an abstraction over low-level HTTP client libraries and was the standard for accessing REST APIs in the old days before non-blocking, reactive communication became part of Spring. It is now in [maintenance mode](https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#rest-resttemplate) and Spring recommends using the newer, non-blocking `WebClient` instead.
+[RestTemplate](https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#rest-resttemplate) provides an abstraction over low-level HTTP client libraries and was the standard for accessing REST APIs in the old days before non-blocking, reactive communication became part of Spring. It is now in [maintenance mode](https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#rest-resttemplate) and Spring recommends using the newer, non-blocking [WebClient](https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#webflux-client) instead.
 
 For now we stick with the RestTemplate however as this post is centered around Spring Web and is therefore blocking anyways.
 
@@ -181,7 +179,7 @@ It is rather difficult to piece together all necessary information on how Spring
 
 ##### Spring
 
-Spring (without Boot) does not provide a pre-configured RestTemplate bean. It has to be instantiated manually. The RestTemplate class [provides multiple constructors](https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#rest-resttemplate-create) which allow you to configure the type of HTTP connection to be used.
+Spring (without Boot) **does not provide a pre-configured RestTemplate bean**. It has to be instantiated manually. The RestTemplate class [provides multiple constructors](https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#rest-resttemplate-create) which allow you to configure the type of HTTP connection to be used.
 
 The default constructor uses [JDK](https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpClient.html)'s `java.net.HttpURLConnection`. A new connection is created for each request and subsequently closed again. The connections are not reused or pooled on any way.
 
@@ -196,7 +194,7 @@ RestTemplate template = new RestTemplate(new HttpComponentsClientHttpRequestFact
 ```
 This example uses Apaches HttpComponents as client library which does implement connection pooling.
 
-In addition to the aforementioned JDK default, the following libraries are also supported by Spring, all of which use connection pooling:
+In addition to the aforementioned [JDK](https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpClient.html) default, the following libraries are also supported by Spring, all of which use connection pooling:
 - [Apache HttpComponents](https://hc.apache.org) (see the example above)
 - [Reactor Netty](https://github.com/reactor/reactor-netty)
 - [OkHttp](https://square.github.io/okhttp/)
@@ -231,9 +229,9 @@ Therefore, no matter which servlet container you choose, you have to make sure t
 
 #### A Word on Spring WebClient
 
-As mentioned before, RestTemplate is already in maintenance mode and [Spring recommends](https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#rest-resttemplate) using `WebClient` instead. The latter is part of Spring Webflux and therefore non-blocking. So why and how should we use WebClient for Spring Web applications then?
+As mentioned before, `RestTemplate` is already in maintenance mode and [Spring recommends](https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#rest-resttemplate) using `WebClient` instead. The latter is part of Spring Webflux and therefore non-blocking. So why and how should we use WebClient for Spring Web applications then?
 
-The answer to this is [just one click away]({{ site.baseurl }}{% post_url 2023-04-04-spring-webmvc-with-webclient %}) in another post!
+The answer to this is [just one click away]({{ site.baseurl }}{% post_url 2023-04-04-spring-webmvc-with-webclient %}), in another post!
 
 
 ## 6. What about Netty
