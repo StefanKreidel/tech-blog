@@ -73,9 +73,9 @@ blockquote {
   margin: 32px 0;
   padding: 24px 0 24px 56px;
   font-family: $heading-font-family;
-  font-size: 30px;
+  font-size: 22px;
   line-height: 1.6;
-  font-style: normal;
+  font-style: italic;
   color: var(--heading-font-color);
 
   &::before {
@@ -84,9 +84,9 @@ blockquote {
     top: 0.7em;
     left: 0;
     font-family: $base-font-family;
-    font-size: 3.5em;
+    font-size: 4.5em;
     line-height: 0;
-    color: var(--heading-font-color);
+    color: var(--heading-font-color); 
   }
 
   p {
