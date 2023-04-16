@@ -50,7 +50,7 @@ This RestTemplate will use a `PoolingHttpClientConnectionManager` by default whi
 
 To summarize the example, whenever the main worker thread needs to make an HTTP request, RestTemplate uses an existing HTTP connection from the pool. The thread has to wait for a result (or timeout) from the connection before moving on.
 
-Now let's have a look at how things are different if we use WebClient instead:
+Now let's have a look at how things are different if we **use WebClient** instead:
 
 <motion-canvas-player 
     src="{{ '/js/animation/spring-webmvc/spring-web-client.js' | prepend: site.baseurl }}">

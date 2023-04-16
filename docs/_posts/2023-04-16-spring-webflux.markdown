@@ -9,6 +9,14 @@ tags:   [Spring, Webflux]
 tags_color: '#16afd0'
 ---
 
+Reactive programming, like many other programming paradigms, is quite easy to grasp but at the same time difficult to fully understand.
+
+Imagine going into a Café and ordering your favorite caffeinated beverage. After placing the order, you could wait around, maybe have a look at the busy street outside, until the barista finished your coffee. Or, right after ordering, you could pick up your phone, answer an email and check up on your next meeting, all the while being ready to *react* to the barista calling your name. As I said, it is easy to grasp the concept and understand, which one can be more efficient if implemented correctly, but it is not so easy to understand, how this is achieved behind the facade of a framework, such as Spring.
+
+Now, this post will not be focused on reactive programming in general. Other sites and blogs have already done so splendidly. I will focus on how this is integrated in and hidden behind Spring and do so in a fun and easy to understand way. So yes, **there will be animations** ahead.
+
+## 1. What it means to be Reactive
+
 
 ## EventLoop as core
 
