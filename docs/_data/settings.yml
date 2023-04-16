@@ -12,8 +12,10 @@ menu__settings:
   menu__items:
     - title: 'Home'
       url: '/'
-    - title: 'Blog'
+    - title: 'Posts'
       url: '/blog/'
+    - title: 'Categories'
+      url: '/tags/'
     - url: '/about/'
       title: 'About'
     # - url: '/contact/'
@@ -48,6 +50,13 @@ author:
 
 
 #-------------------------------
+# Tags Section Settings
+tags__settings:
+  enable: true
+  tags__title: Categories
+  tags__description:
+
+#-------------------------------
 # Blog Section Settings
 blog__settings:
   enable: true
@@ -67,7 +76,7 @@ videos__settings:
 # Tag Section Settings
 tag__settings:
   enable: false
-  tag: travel # To display the tag section, specify your favorite tag.
+  tag: Webflux # To display the tag section, specify your favorite tag.
 
 
 #-------------------------------

@@ -11,7 +11,7 @@
     <div class="row">
       {% assign count = 0 %}
       {% for post in site.posts %}
-      {% if post.featured == true %}
+      {% if post.featured == true and count < 4 %}
       {% assign count = count | plus: 1 %}
       <div class="article col {% if count == 1 %}col-12 article--first{% else %}col-4 col-d-6 col-t-12{% endif %}">
         <div class="article__inner">

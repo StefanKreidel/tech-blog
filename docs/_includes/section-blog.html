@@ -20,7 +20,7 @@
 
           <div class="row">
             {% if site.posts.size > 0 %}
-              {% for post in site.posts offset:0 limit:7 %}
+              {% for post in site.posts offset:0 limit:5 %}
                 <div class="article col {% if forloop.index == 1 and page.url == '/' %}col-12 article--first{% else %}col-6 col-w-10 col-d-12{% endif %}">
                   <div class="article__inner">
 

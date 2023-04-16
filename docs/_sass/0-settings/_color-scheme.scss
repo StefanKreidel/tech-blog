@@ -3,17 +3,20 @@
 :root {
   --brand-color: #0056fe;
   --white: #fff;
+  --white-semi-transparent: #ffffffd1;
   --light-gray: #f0f0f0;
   --light-blue: #f3f7ff;
   --blue-gray: #677387;
   --gray: #9e9e9e;
   --dark: #0c101a;
   --dark-blue: #040b1f;
+  --dark-blue-semi-transparent: #040b1fd1;
   --rgb-image-color: 255, 255, 255;
   
   --image-gradient: linear-gradient(180deg, rgba(var(--rgb-image-color), 0.8), rgba(var(--rgb-image-color), 1));
 
   --background-color: var(--white);
+  --background-color-semi-transparent: var(--white-semi-transparent);
   --background-alt-color: var(--light-blue);
   
   --text-color: var(--dark-blue);
@@ -49,6 +52,7 @@
   --image-gradient: linear-gradient(180deg, rgba(var(--rgb-image-color), 0.8), rgba(var(--rgb-image-color), 1));
 
   --background-color: var(--dark-blue);
+  --background-color-semi-transparent: var(--dark-blue-semi-transparent);
   --background-alt-color: var(--dark);
   
   --text-color: var(--gray);

@@ -49,7 +49,16 @@
     text-overflow: ellipsis;
     border-radius: 4px;
     color: var(--heading-font-color);
-    background: var(--background-color);
+    background: var(--background-color-semi-transparent);
     pointer-events: none;
+
+    div {
+      text-align: center;
+    }
+
+    .post-count {
+      font-style: italic;
+    }
+
   }
 }
