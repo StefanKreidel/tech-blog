@@ -17,6 +17,11 @@ Now, this post will not be focused on reactive programming in general. Other sit
 
 ## 1. What it means to be Reactive
 
+<motion-canvas-player 
+    src="{{ '/js/animation/spring-webflux/spring-webflux-lifecycle.js' | prepend: site.baseurl }}" 
+    auto="true">
+</motion-canvas-player>
+
 
 ## EventLoop as core
 

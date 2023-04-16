@@ -8,6 +8,8 @@ import springThreadsUndertow from './scenes/spring-webmvc/spring-threads-underto
 import springRestTemplate from './scenes/spring-webmvc/spring-rest-template?scene'
 import springWebClient from './scenes/spring-webmvc/spring-web-client?scene'
 
+import springWebfluxLifecycleBasic from './scenes/spring-webflux/spring-webflux-lifecycle-basic?scene'
+
 import './global.css';
 
 export default makeProject({
@@ -18,6 +20,7 @@ export default makeProject({
     // springThreads,
     // springThreadsUndertow,
     // springRestTemplate,
-    springWebClient
+    // springWebClient,
+    springWebfluxLifecycleBasic
   ]
 });
