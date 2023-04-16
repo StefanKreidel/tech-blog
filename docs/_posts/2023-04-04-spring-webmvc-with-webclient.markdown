@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  'Spring Web MVC + WebClient: How they work Together'
-date:   2023-04-03 20:29:35 +0100
+date:   2023-04-04 20:29:35 +0100
 author: stefan
 image:  'https://i.imgur.com/l2QPLfV.jpg'
 featured: true
