@@ -64,7 +64,14 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 
 
-  // Theme Switcher
+  // Set default theme to dark-mode unless user has manually chosen light-mode
+  if (localStorage.getItem("themeChosenByUser") !== "true" )  {
+    html.classList.add('dark-mode');
+    localStorage.setItem("theme", "dark");
+    document.documentElement.setAttribute("dark", "");
+  }
+
+  // Theme switcher
   if (toggleTheme) {
     toggleTheme.addEventListener("click", () => {
       darkMode();
@@ -72,6 +79,8 @@ document.addEventListener("DOMContentLoaded", function() {
   };
 
   function darkMode() {
+    localStorage.setItem("themeChosenByUser", "true")
+
     if (html.classList.contains('dark-mode')) {
       html.classList.remove('dark-mode');
       localStorage.removeItem("theme");
