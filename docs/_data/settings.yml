@@ -122,10 +122,12 @@ footer__menu__settings:
   menu__items:
     - title: 'Home'
       url: '/'
-    - title: 'Blog'
+    - title: 'Posts'
       url: '/blog/'
-    - title: 'About'
-      url: '/about/'
+    - title: 'Categories'
+      url: '/tags/'
+    - url: '/about/'
+      title: 'About'
     # - title: 'Contact'
     #   url: '/contact/'
 

@@ -13,7 +13,7 @@ export default makeScene2D(function* (view) {
   const shortTransition = longTransition / 2;
 
   const springColor = '#5caa22';
-  const boxColor = 'lightgray';
+  const boxColor = 'gray';
 
   const requestColor = '#8e524a';
   const requestCompleteColor = '#46a33c';

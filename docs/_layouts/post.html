@@ -124,7 +124,7 @@ layout: default
         {% if author %}
         <h3 class="card-author__name"><a href="{{ author.url | prepend: site.baseurl }}" class="card-author__link">{{ author.name }}</a></h3>
         <p class="card-author__description">{{ author.content }}</p>
-        <a href="{{ site.data.settings.author__section.author__section__button__link | relative_url }}">Read it here!</a>
+        <a href="{{ site.data.settings.author__section.author__section__button__link | relative_url }}">Read it here!<i class="ion ion-md-arrow-forward"></i></a>
         {% else %}
         <h3 class="card-author__name"><a href="{{site.baseurl}}/about/" class="card-author__link">{{ site.data.settings.author.author__name }}</a></h3>
         <p class="card-author__description">{{ site.data.settings.author.author__name.author__bio }}</p>

@@ -355,6 +355,16 @@
 
     &:hover {
       text-decoration-color: var(--link-color-hover);
+      
+      i {
+        transform: rotate(-45deg) translateX(2px);
+      }
+    }
+    
+    i {
+      margin-left: 8px;
+      transform: rotate(-45deg);
+      transition: all .1s;
     }
   }
 
