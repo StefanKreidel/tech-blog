@@ -1,11 +1,11 @@
 ---
 layout: post
-title:  'Spring Webflux Visualized: Threading and EventLoops'
+title:  'Spring WebFlux Visualized: Threading and EventLoops'
 date:   2023-04-16 09:10:00 +0100
 author: stefan
 image:  'https://i.imgur.com/eODIUMc.jpg'
 featured: true
-tags:   [Spring, Webflux]
+tags:   [Spring, WebFlux]
 tags_color: '#16afd0'
 ---
 
@@ -26,9 +26,52 @@ The animation visualizes fully reactive event handling. The `EventHandler` (this
 
 Both of these event types can happen at any time. If the EventHandler happens to by free, the event is picked up and handled immediately. If it is busy however, the event is queued until the handler is free again.
 
-Even though this concept alone is the easy part, I find it helpful to have a good understanding of the basics before trying to dive deeper. And as I promised, the reactive programming paradigm does not sound all that complicated on that level. However, there is a lot of **complicated things** hidden underneath which is, in my opinion, definitely **worth understanding** if you want to start optimizing your Spring-Webflux performance or throughput.
+Even though this concept alone is the easy part, I find it helpful to have a good understanding of the basics before trying to dive deeper. And as I promised, the reactive programming paradigm does not sound all that complicated on that level. However, there is a lot of **complicated things** hidden underneath which is, in my opinion, definitely **worth understanding** if you want to start optimizing your Spring-WebFlux performance or throughput.
 
-## EventLoop as core
+## 2. How Threads are used to achieve Reactiveness
+
+[Spring supports multiple, non-blocking web servers](https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#webflux-server-choice), which fall into two categories: *non-blocking servlet containers* like [Apache Tomcat](https://tomcat.apache.org/), [Eclipse Jetty](https://www.eclipse.org/jetty/) and other [Servlet 3.1+ containers](https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#threading-model), and *non-servlet runtimes* such as [Netty](https://netty.io) and [JBoss Undertow](https://undertow.io/).
+
+The Spring Framework itself [does not have support](https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#webflux-server-choice) for starting a server automatically. Spring Boot on the other hand (yes, those are two different things) has a WebFlux starter which automatically starts Netty by default. The reason is that out of all the aforementioned servers, only Netty was implemented to be non-blocking from the ground up. So unless you have a good reason for choosing one of the other servers, **I would strongly recommend sticking with Netty**. Because of that, the following deep-dive will mainly focus on Netty's EventLoop implementation to explain how Spring achieves reactiveness.
+
+#### Getting started with WebFlux and Netty
+
+As with most things Spring Boot, configuring and starting a reactive, WebFlux based application is very simple:
+
+```groovy
+// build.gradle.kts
+plugins {
+  java
+  id("org.springframework.boot") version "3.0.5"
+  id("io.spring.dependency-management") version "1.1.0"
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation("org.springframework.boot:spring-boot-starter-webflux")
+}
+```
+
+```java
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class MyWebfluxApplication {
+
+  public static void main(String[] args) {
+    SpringApplication.run(MyWebfluxApplication.class, args);
+  }
+
+}
+```
+
+Among a lot of other "magic" things, on startup, Spring starts an embedded Netty webserver. The main difference compared to the other servers supported by Spring is that **Netty does not work on Servlets**, which dispatch incoming requests ready to be picked up by a worker thread (I have already written a detailed [post]({{ site.baseurl }}{% post_url 2023-03-19-spring-webmvc-servlet-threading %}) discussing how that works internally), but on **EventLoop**s.
+
+#### Netty EventLoop's
 
 quick disclosure before we begin: only applies to webflux on netty
 
