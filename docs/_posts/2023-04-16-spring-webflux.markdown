@@ -69,34 +69,53 @@ public class MyWebfluxApplication {
 }
 ```
 
-Among a lot of other "magic" things, on startup, Spring starts an embedded Netty webserver. The main difference compared to the other servers supported by Spring is that **Netty does not work on Servlets**, which dispatch incoming requests ready to be picked up by a worker thread (I have already written a detailed [post]({{ site.baseurl }}{% post_url 2023-03-19-spring-webmvc-servlet-threading %}) discussing how that works internally), but on **EventLoop**s.
+Among a lot of other "magic" things, on startup, Spring starts an embedded Netty webserver. The main difference compared to the other servers supported by Spring is that **Netty does not work on Servlets**, which dispatch incoming requests ready to be picked up by a worker thread (I have already written a detailed [post]({{ site.baseurl }}{% post_url 2023-03-19-spring-webmvc-servlet-threading %}) discussing how that works internally), but on `EventLoop`s.
 
 #### Netty EventLoop's
 
-quick disclosure before we begin: only applies to webflux on netty
+EventLoop is at it's most basic just a fancy name for a **non-blocking IO thread**, based on [Java NIO](https://docs.oracle.com/en/java/javase/15/core/java-nio.html). So technically speaking, it is not all that much different from a worker thread we already know from "classic" Spring Web. The important difference becomes more obvious once we understand how EventLoops behave.
 
-- how they work
-  - heavy weight, have to run continuously
-  - more event-loops does not help --> if blocking
+Typically, a couple of EventLoops are running at all time, managed by an `EventLoopGroup`. Each EventLoop handles a number of `SocketChannel`s, through which requests can be accepted (on the server side) or made (on the client side). Whenever a new SocketChannel is created, it is bound to one EventLoop exactly and this binding cannot be changed anymore. This is the first big difference compared to Spring Web: **Sockets are continuously bound to the same EventLoop** (and thereby thread). This means that a blocked EventLoop causes queuing of incoming requests, event if another EventLoop is free.
 
-#### netty
+*TODO: animation of SocketChannels being bound to ine EventLoop*
 
-#### non blocking servlet container
+This nicely brings us along to the next unique behavior: compared to normal worker threads, **EventLoops must be kept running at all time**. As SocketChannels cannot be re-bound to another EventLoop, stopping the latter would effectively starve those SocketChannels (meaning that no further requests could be processed).
 
-quick explanation but deserves its own post
+Lastly, because all EventLoops have to be kept running at all times and because there is a big resource overhead for switching contexts of running, native Java threads, it is strongly recommended to only ever have **as many EventLoops as there are available processors**. This recommendation has one caveat however, which we will discuss later when talking about [blocking operations](#3-blocking-operations).
 
-## what on blocking operations
+*TODO: link to small article which explains 'why you should not change ioWorkerCount and when you still might have to'*
+
+#### EventLoop Resource Handling
+
+The core of reactive programming defines, that **instead of waiting for blocking operation to finish, threads do other things in the meantime and pick up the response after the operation completed**. This implies two things. First, parts of a request can be handled by multiple threads (contrary to Spring Web, which operates under the one-thread-per-request philosophy). This alone explains why **scoped beans do not exist in Spring WebFlux**: they cannot be bound to the thread handling the request, as the thread can change. That is why WebFlux introduces the `SubscriberContext` (TODO: link to functional programming paragraph). Second, a lightweight mechanism for saturating threads with work from different contexts is required. And with this, we are finally at the core of how reactive programming is achieved in the case of Spring WebFlux.
+
+*TODO Animation*
+
+Each incoming request is picked up by the EventLoop of the corresponding SocketChannel via the inbound `ChannelHandler`. The EventLoop then executes all compute steps defined in code until a blocking operation (e.g. network call or filesystem access) is reached. The request context is now "handed over" (more on that later) and a callback function is registered. With that, the EventLoop is free again, ready to handle other requests or tasks.
+
+Once the blocking operation has finished, the callback function is executed. This results in a new `Task` which is being added to the `ScheduledTaskQueue`. The next free EventLoop picks up this task and performs further computation steps. This process is repeated until the request is fully handled and a response can be sent.
+
+## 3. Blocking Operations
 
 - reactive library (like webclient) with resource sharing if possible
 - if non exist: delegate to dedicated resources (but that does not scale well; still better than blocking event loop) (compare to undertow)
+- how to increase event loops in case of blocking calls
 
-## non-blocking vs parallel compute
+- all only works if application never blocks
+- can scale perfectly to processor limit
+
+## 4. Non-Blocking vs. Asynchronous Computation
 
 - can be done (flux run on different schedular)
 - io schedular vs parallel schedular
 
+## 5. Reactive and Functional Programming are Intertwined
 
 
+
+## 6. Spring WebFlux on Servlet Containers
+
+quick explanation but deserves its own post
 
 
 ## Info
