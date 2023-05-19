@@ -104,6 +104,8 @@ Once the blocking operation has finished, the callback function is executed. Thi
 - all only works if application never blocks
 - can scale perfectly to processor limit
 
+#### WebClient
+
 ## 4. Non-Blocking vs. Asynchronous Computation
 
 - can be done (flux run on different schedular)
