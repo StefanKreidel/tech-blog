@@ -9,6 +9,7 @@ import springRestTemplate from './scenes/spring-webmvc/spring-rest-template?scen
 import springWebClient from './scenes/spring-webmvc/spring-web-client?scene'
 
 import springWebfluxLifecycleBasic from './scenes/spring-webflux/spring-webflux-lifecycle-basic?scene'
+import springWebfluxSocketBinding from './scenes/spring-webflux/spring-webflux-socket-binding?scene'
 
 import './global.css';
 
@@ -21,6 +22,7 @@ export default makeProject({
     // springThreadsUndertow,
     // springRestTemplate,
     // springWebClient,
-    springWebfluxLifecycleBasic
+    // springWebfluxLifecycleBasic,
+    springWebfluxSocketBinding
   ]
 });
