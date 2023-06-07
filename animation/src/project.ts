@@ -8,8 +8,11 @@ import springThreadsUndertow from './scenes/spring-webmvc/spring-threads-underto
 import springRestTemplate from './scenes/spring-webmvc/spring-rest-template?scene'
 import springWebClient from './scenes/spring-webmvc/spring-web-client?scene'
 
-import springWebfluxLifecycleBasic from './scenes/spring-webflux/spring-webflux-lifecycle-basic?scene'
-import springWebfluxSocketBinding from './scenes/spring-webflux/spring-webflux-socket-binding?scene'
+import springWebfluxLifecycleBasic from './scenes/spring-webflux/spring-webflux-1-lifecycle-basic?scene'
+import springWebfluxSocketBinding from './scenes/spring-webflux/spring-webflux-2-socket-binding?scene'
+import springWebfluxBlockingOperations from './scenes/spring-webflux/spring-webflux-3-blocking-operations?scene'
+import springWebfluxWebClient from './scenes/spring-webflux/spring-webflux-4-webclient?scene'
+import springWebfluxBoundedElastic from './scenes/spring-webflux/spring-webflux-5-bounded-elastic?scene'
 
 import './global.css';
 
@@ -23,6 +26,9 @@ export default makeProject({
     // springRestTemplate,
     // springWebClient,
     // springWebfluxLifecycleBasic,
-    springWebfluxSocketBinding
+    // springWebfluxSocketBinding,
+    // springWebfluxBlockingOperations,
+    // springWebfluxWebClient,
+    springWebfluxBoundedElastic
   ]
 });

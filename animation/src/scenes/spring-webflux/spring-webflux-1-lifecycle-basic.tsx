@@ -92,7 +92,7 @@ export default makeScene2D(function* (view) {
         stroke={springColor}
         radius={20}
       >
-        <Txt text={'Spring'} y={-350} {...headingStyle} />
+        <Txt text={'Spring WebFlux'} y={-350} {...headingStyle} />
         <Txt text={'created by Stefan Kreidel'} fill={'grey'} fontSize={28} y={500} fontFamily={'Noto Sans Display'} />
       </Rect>
 
