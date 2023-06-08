@@ -36,7 +36,7 @@ menu__settings:
 # Hero Settings
 hero:
   enable: true
-  hero__title: Code snippets, patterns and best-practices.
+  hero__title: Patterns, Best-Practices and Animations.
   hero__description: "Explaining complicated things in a lightweight and easy to grasp way is anything but simple. Join me in my journey to yet another tech-blog with one twist: lots of animation!"
   hero__image: # You can add hero image. For example '/images/06.jpg'
 
