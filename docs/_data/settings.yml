@@ -1,8 +1,8 @@
 #-------------------------------
 # Site Settings
-title: TITLE
+title: Stefan Kreidel
 logo: # You can add own logo. For example '/images/logo.png'.
-description: TITLE discusses all things software engineering
+description: Stefan discusses all things software engineering
 color_scheme: auto # You can choose three modes auto, light, and dark. By default, the auto mode is set, which means the user can choose the light or dark mode themself.
 
 
