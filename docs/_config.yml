@@ -1,8 +1,8 @@
 #-------------------------------
 # General Site Settings
 domain: "stefankreidel.github.io" # domain of the github pages site or c-name
-baseurl: "/tech-blog" # the subpath of your site, e.g. /blog
-url: "https://stefankreidel.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "https://stefankreidel.io" # the base hostname & protocol for your site, e.g. http://example.com
 
 
 #-------------------------------
