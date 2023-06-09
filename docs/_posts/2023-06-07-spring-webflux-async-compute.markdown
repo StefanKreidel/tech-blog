@@ -1,9 +1,9 @@
 ---
 layout: post
-title:  'Spring WebFlux: Executing code in Parallel'
+title:  'Spring WebFlux: Executing Code in Parallel'
 date:   2023-06-07 20:10:00 +0100
 author: stefan
-image:  'https://i.imgur.com/6JeEwUq.jpg'
+image:  'https://i.imgur.com/RaDaUGL.jpg'
 featured: true
 tags:   [Spring, WebFlux]
 tags_color: '#16afd0'

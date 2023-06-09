@@ -9,7 +9,16 @@
   <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
   <link rel="alternate" type="application/rss+xml" title="{{ site.title | escape }}" href="{{ "/feed.xml" | relative_url }}">
 
-  <!-- TODO: add favicons as in https://ptc-it.de/add-favicon-to-mm-jekyll-site/ -->
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ site.baseurl }}/images/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ site.baseurl }}/images/favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ site.baseurl }}/images/favicons/favicon-16x16.png">
+  <link rel="manifest" href="{{ site.baseurl }}/images/favicons/site.webmanifest">
+  <link rel="mask-icon" href="{{ site.baseurl }}/images/favicons/safari-pinned-tab.svg" color="#1f2934">
+  <link rel="shortcut icon" href="{{ site.baseurl }}/images/favicons/favicon.ico">
+  <meta name="msapplication-TileColor" content="#00aba9">
+  <meta name="msapplication-config" content="{{ site.baseurl }}/images/favicons/browserconfig.xml">
+  <meta name="theme-color" content="#1f2934">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">

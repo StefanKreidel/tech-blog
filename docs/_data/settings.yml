@@ -1,7 +1,7 @@
 #-------------------------------
 # Site Settings
 title: Stefan Kreidel
-logo: # You can add own logo. For example '/images/logo.png'.
+logo: # no logo, looks not very good
 description: Stefan discusses all things software engineering
 color_scheme: auto # You can choose three modes auto, light, and dark. By default, the auto mode is set, which means the user can choose the light or dark mode themself.
 
