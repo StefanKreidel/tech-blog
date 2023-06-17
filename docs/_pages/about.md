@@ -6,6 +6,7 @@ image: 'https://i.imgur.com/7Z7j1uW.jpg'
 website: https://github.com/StefanKreidel
 github: https://github.com/StefanKreidel
 linkedin: https://www.linkedin.com/in/stefan-kreidel-838b87169/
+email: mailto:info@stefankreidel.io
 ---
 
 My name is Stefan Kreidel and I am a Software Engineer and Architect located im Germany. Even though I still live in the city I was born in, I enjoy visiting new places (preferably far away) whenever I find the time and, let's be real, money for it.
