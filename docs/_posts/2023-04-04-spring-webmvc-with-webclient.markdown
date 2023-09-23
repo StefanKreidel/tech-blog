@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  'Spring Web MVC + WebClient: How they work Together'
+description: 'Spring`s new WebClient is part of WebFlux / reactive Spring. But it is recommended to be used for Spring Web MVC as well. This post explains how WebClient is implemented in a non-reactive framework.'
 date:   2023-04-04 20:29:35 +0100
 author: stefan
 image:  'https://i.imgur.com/l2QPLfV.jpg'

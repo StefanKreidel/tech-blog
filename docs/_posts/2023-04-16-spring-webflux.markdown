@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  'Spring WebFlux Visualized: Threading and EventLoops'
+description: 'If EventLoops are fundamentally just threads, then how do they differ from traditional Java threads and how do they prevent your CPU from starving when many blocking operations occur at the same time?'
 date:   2023-04-16 09:10:00 +0100
 author: stefan
 image:  'https://i.imgur.com/eODIUMc.jpg'
