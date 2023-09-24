@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  'Copying EXIF Metadata'
-description: 'Recover original medatada after transcoding or editing photos or videos (Mac and Linux).'
+title:  'Copying EXIF Metadata (Mac and Linux)'
+description: 'Recover original medatada after transcoding or editing photos or videos.'
 date:   2023-09-22 20:10:00 +0100
 author: stefan
 image:  'https://i.imgur.com/gY3kqu2.jpg'
@@ -27,7 +27,7 @@ It enriches the actual data with meta information about its' content. This can b
 
 Now, as the metadata is technically not part of the actual file, no standard has been established on how to handle it when transcoding a file. In many cases you would argue that you want to retain the original metadata as you did not edit but rather transformed the original file. But some metadata would no longer be correct after transcoding. Maybe the color profile of a file changed. Maybe the bitrate is different. So programs would have to intelligently decide which parts of the original data to keep and which to drop or edit.
 
-## 2. The problem with Photos and Videos
+## 2. The Problem with Photos and Videos
 
 Popular free software like [Handbrake](https://handbrake.fr) (video transcoding), [DaVinci Resolve](https://www.blackmagicdesign.com/products/davinciresolve) (video editing and transcoding) or [Gimp](https://www.gimp.org) (photo editing and transcoding) **do not keep a file's creation date or GPS location**.
 
@@ -35,7 +35,7 @@ On the one hand, this might seem correct. Metadata describes the file itself and
 
 On the other hand, this makes not semantic sense. The original creation date and GPS information is what you want. Even though the file was transcoded, you still want to know where and when a photo or video was taken. Unfortunately, I could not find a simple solution to do this with any non-sketchy program, so I wrote my own script.
 
-## 3. Copy metadata over
+## 3. Copy Metadata over
 
 All photo or video files these days have their metadata stored in a format called [EXIF](https://en.wikipedia.org/wiki/Exif). This means that with all current operating systems, there are two sets of metadata fot those files: EXIF and filesystem metadata.
 
@@ -53,7 +53,7 @@ exiftool -overwrite_original -extractEmbedded -TagsFromFile "/src.file" -All:All
 
 But doing so for hundreds of files is very tedious, so lets **batch process** that. If you are on Mac or Linux, then the following instructions are for you. If you are on **Windows**, watch out for my **next blog post** in the next weeks.
 
-### Meet the script
+### Meet the Acript
 
 1. As mentioned before, `ExifTool` is a prerequisite for this script to work. So go ahead and follow their [install instructions](https://exiftool.org/install.html).
 2. Clone the git repository to my [bash script collection](https://github.com/StefanKreidel/bash-magic/tree/main) or download just the [metadata.sh script](https://github.com/StefanKreidel/bash-magic/blob/main/metacp/metacp.sh) directly.
@@ -64,12 +64,15 @@ chmod +x ./metacp.sh
 4. Optionally: create an executable symlink:
 ```bash
 sudo ln -s "/path/to/metacp.sh" "/path/to/symlink"
-# full example; assumes you are already in the bash file's location
+# full example; assumes you are already in the shell file's location
 sudo ln -s "$(pwd)/metacp.sh" "/usr/local/bin/metacp"
 ```
 5. Use the script:
 ```bash
+# shell file directly
 ./metacp.sh --source "/the/media/source/folder" --destination "/the/media/destination/folder"
+# symlink
+metacp --source "/the/media/source/folder" --destination "/the/media/destination/folder"
 ```
 
 The source folder is where the original files with the correct metadata are located. The destination folder is where your transcoded files are located. This script loops over all files found in the `--destination` folder, searches for the "same" files in the `--source` folder and simply copies the original EXIF metadata over.
