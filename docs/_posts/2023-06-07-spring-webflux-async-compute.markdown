@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  'Spring WebFlux: Executing Code in Parallel'
-description: 'Spring WebFlux is intended to optimize resource utilization if your application implements many blocking operations. It can however also be used to implement parallel compute like Java`s CompletableFuture. This post explains how this can by done and why you SHOULD NOT do so.'
+title:  "Spring WebFlux: Executing Code in Parallel"
+description: "Spring WebFlux is intended to optimize resource utilization if your application implements many blocking operations. It can however also be used to implement parallel compute like Java's CompletableFuture. This post explains how this can by done and why you SHOULD NOT do so."
 date:   2023-06-07 20:10:00 +0100
 author: stefan
 image:  'https://i.imgur.com/RaDaUGL.jpg'

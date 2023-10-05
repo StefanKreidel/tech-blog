@@ -1,11 +1,11 @@
 ---
 layout: post
-title:  'Copying EXIF Metadata (Mac and Linux)'
-description: 'Recover original medatada after transcoding or editing photos or videos.'
+title:  "Copying EXIF Metadata (Mac and Linux)"
+description: "Recover original medatada after transcoding or editing photos or videos."
 date:   2023-09-22 20:10:00 +0100
 author: stefan
 image:  'https://i.imgur.com/gY3kqu2.jpg'
-featured: true
+featured: false
 tags:   [Media, EXIF, Bash]
 tags_color: '#9485a2'
 ---

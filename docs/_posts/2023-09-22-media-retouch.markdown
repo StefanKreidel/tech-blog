@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  'Set Filesystem Creation Date to when Photo or Video was taken (Mac and Linux)'
-description: 'When importing or transcoding photos or videos, the new files` creation date is usually not the date when they were taken. This messes up some program`s file sorting. So let`s fix it.'
+title:  "Set Filesystem Creation Date to when Photo or Video was taken (Mac and Linux)"
+description: "When importing or transcoding photos or videos, the new files' creation date is usually not the date when they were taken. This messes up some program's file sorting. So let`s fix it."
 date:   2023-09-29 20:10:00 +0100
 author: stefan
 image:  'https://i.imgur.com/gladidy.jpg'

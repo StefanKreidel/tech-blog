@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  'Spring Web MVC Visualized: Threading and Servelts'
-description: 'An introduction to how Java threads are used to implement Spring Servlets in order to handle incoming and outgoing requests.'
+title:  "Spring Web MVC Visualized: Threading and Servelts"
+description: "An introduction to how Java threads are used to implement Spring Servlets in order to handle incoming and outgoing requests."
 date:   2023-03-19 13:30:35 +0100
 author: stefan
 image:  'https://i.imgur.com/N1XPmMN.jpg'
