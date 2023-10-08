@@ -226,14 +226,14 @@ export default makeScene2D(function* (view) {
   yield* all(
     osThread2().absolutePosition(workerThread().absolutePosition, longTransition),
     osThread2().width(() => workerThread().width() + 10, longTransition),
-    osThread2  ().height(() => workerThread().height() + 10, longTransition)
+    osThread2().height(() => workerThread().height() + 10, longTransition)
   );
   yield* waitFor(shortTransition);
 
   yield* all(
-    workerThread().absolutePosition(codeRef().absolutePosition(), longTransition),
-    workerThread().width(800, longTransition),
-    workerThread().height(230, longTransition),
+    workerThread().absolutePosition(codeRef().absolutePosition().addX(40), longTransition),
+    workerThread().width(750, longTransition),
+    workerThread().height(110, longTransition),
     workerThreadText().position.y(90, longTransition)
   );
 
@@ -249,11 +249,11 @@ export default makeScene2D(function* (view) {
 
   //resume on main thread
   yield* chain(
-    codeRef().selection(lines(4, 4), longTransition),
-    codeRef().selection(lines(5, 5), longTransition),
-    codeRef().selection(lines(6, 6), longTransition),
+    codeRef().selection(lines(4, 4), shortTransition),
+    codeRef().selection(lines(5, 5), shortTransition),
+    codeRef().selection(lines(6, 6), shortTransition)
   )
-  yield* waitFor(shortTransition);
+  // yield* waitFor(shortTransition);
   yield* all(
     mainThread().restore(longTransition),
     mainThreadText().restore(longTransition)
@@ -261,5 +261,5 @@ export default makeScene2D(function* (view) {
   
 
 
-  yield* waitFor(longTransition * 2);
+  yield* waitFor(longTransition * 8);
 });

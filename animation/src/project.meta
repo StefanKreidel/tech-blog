@@ -18,7 +18,7 @@
   },
   "rendering": {
     "fps": 60,
-    "resolutionScale": 2,
+    "resolutionScale": 1,
     "colorSpace": "srgb",
     "exporter": {
       "name": "image sequence",
@@ -27,9 +27,6 @@
         "quality": 100,
         "groupByScene": false
       }
-    },
-    "fileType": "image/png",
-    "quality": 1,
-    "groupByScene": false
+    }
   }
 }

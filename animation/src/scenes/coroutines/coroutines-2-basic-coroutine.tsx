@@ -1,6 +1,5 @@
 import { makeScene2D } from '@motion-canvas/2d/lib/scenes';
-import { Circle, Icon, Line, Rect, Txt } from '@motion-canvas/2d/lib/components';
-import { CodeBlock, insert, lines } from '@motion-canvas/2d/lib/components/CodeBlock';
+import { Circle, Icon, Rect, Txt } from '@motion-canvas/2d/lib/components';
 import { createRef, makeRef, useScene } from '@motion-canvas/core/lib/utils';
 import { all, chain, waitFor } from '@motion-canvas/core/lib/flow';
 

@@ -3,7 +3,7 @@ import { Line, Rect, Txt, Shape, Circle } from '@motion-canvas/2d/lib/components
 import { createRef, makeRef, useScene } from '@motion-canvas/core/lib/utils';
 import { all, chain, waitFor } from '@motion-canvas/core/lib/flow';
 import { Vector2 } from '@motion-canvas/core/lib/types';
-import { createSignal, SimpleSignal } from '@motion-canvas/core/lib/signals';
+import { createSignal } from '@motion-canvas/core/lib/signals';
 
 import "@motion-canvas/core/lib/types/Color"
 

@@ -33,7 +33,7 @@ export default makeProject({
     // springWebfluxBlockingOperations,
     // springWebfluxWebClient,
     // springWebfluxBoundedElastic,
-    // coroutinesThread,
-    coroutinesBasic
+    coroutinesThread,
+    // coroutinesBasic
   ]
 });
