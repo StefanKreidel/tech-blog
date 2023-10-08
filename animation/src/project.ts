@@ -14,6 +14,9 @@ import springWebfluxBlockingOperations from './scenes/spring-webflux/spring-webf
 import springWebfluxWebClient from './scenes/spring-webflux/spring-webflux-4-webclient?scene'
 import springWebfluxBoundedElastic from './scenes/spring-webflux/spring-webflux-5-bounded-elastic?scene'
 
+import coroutinesThread from './scenes/coroutines/coroutines-1-create-thread?scene'
+import coroutinesBasic from './scenes/coroutines/coroutines-2-basic-coroutine?scene'
+
 import './global.css';
 
 export default makeProject({
@@ -29,6 +32,8 @@ export default makeProject({
     // springWebfluxSocketBinding,
     // springWebfluxBlockingOperations,
     // springWebfluxWebClient,
-    springWebfluxBoundedElastic
+    // springWebfluxBoundedElastic,
+    // coroutinesThread,
+    coroutinesBasic
   ]
 });

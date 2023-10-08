@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Kotlin Coroutines are not Threads. So why do they behave as such?"
-description: "Some descriptions"
+description: "You oftern hear that 'Coroutines are like Threads but also different'. But if they are not threads, then what are they and how are they implemented on the JVM? This post will explain the basics."
 date: 2023-10-02 14:30:00 +0100
 author: stefan
 image: 'https://i.imgur.com/tTknCXP.jpg'
@@ -10,7 +10,7 @@ tags: [Kotlin, Coroutines]
 tags_color: '#f07010'
 ---
 
-**Kotlin Coroutines** are often described to be like **lightweight threads** with all of their benefits (parallel compute, non blocking behavior) while having non of their downsides (initialization time, CPU and memory utilization). This explanation is very much correct except for the fact, that they are not *like* threads. They just behave as such but are actually something completely different.
+**Kotlin Coroutines** are often described to be like **lightweight threads** with all of their benefits (parallel compute, non blocking behavior) while having non of their downsides (initialization time, CPU and memory utilization). This explanation is very much correct except for the fact, that they are not *like* threads. They just behave as such but are actually something **completely different**.
 
 This is the first post in a series, which will eventually cover Coroutines in all of their nitty, gritty details. If you are genrally interested or are currently facing a problem which you just cannot understand, you came to the right place! So let us take a closer look by, of course, first covering the basics.
 
@@ -19,7 +19,10 @@ This is the first post in a series, which will eventually cover Coroutines in al
 
 Standard threads in Java are so called **native threads**. These threads are backed by actual operating system threads. This means that each individual thread is very efficient, as it is very *close* to the actual threading happening on CPU level. But it also means that they are very expensive to create, as not only *virtual* things have to happen on the JVM but the OS has to create a native thread.
 
-*TODO*: animation
+<motion-canvas-player 
+    src="{{ '/js/animation/coroutines/coroutines-1-threads.js' | prepend: site.baseurl }}" 
+    auto="true">
+</motion-canvas-player><br/>
 
 For that reason, many frameworks do not create threads on the fly when they are needed but instead create a reusable thread pool upon startup. This slows startup time down but also keeps the threads handy and avoids hick-ups whenever some work is dispatched to a thread.
 
@@ -62,58 +65,31 @@ It took just over 100 milliseconds to create all 100,000 coroutines. Then they a
 
 ### The Power of clever Code
 
-In the most basic terms, **coroutines have nothing to do with threads**. They are no alternative to threads nor a different implementation (on JVM level). They are just a **different way of working with threads**.
+In the most basic terms, **coroutines have nothing to do with threads**. They are no alternative to threads nor a different implementation (on JVM level). They are just a **different way of working *with* threads**.
 
-The same native threads are used for coroutines with all of the aforementioned downsides. But only a very small number is used. By default, coroutines create as many worker threads as there are logical processors (but at least two) and 64 IO threads (for blocking operations).
+The same native threads are used for coroutines with all of the aforementioned downsides. But only a very small number are created. By [default](https://github.com/Kotlin/kotlinx.coroutines/blob/master/kotlinx-coroutines-core/jvm/src/scheduling/Dispatcher.kt), coroutines create as many [worker threads](https://github.com/Kotlin/kotlinx.coroutines/blob/2a580dfda516dff197c400669cceebc78bfb647a/kotlinx-coroutines-core/jvm/src/scheduling/Tasks.kt#L33-L37) as there are logical processors (but at least two) and 64 [IO threads](https://github.com/Kotlin/kotlinx.coroutines/blob/2a580dfda516dff197c400669cceebc78bfb647a/kotlinx-coroutines-core/jvm/src/scheduling/Dispatcher.kt#L62-L65) (for blocking operations).
 
 The work each coroutine has to execute is then cut into small pieces. These cuts are made at places where the code is **suspendable**, meaning there is a break in execution. Whenever work is suspended, the coroutine is offloaded from its thread, freeing the thread up for other work. When execution can resume, it is assigned to one of the available threads.
 
-*TODO*: animation
+<motion-canvas-player 
+    src="{{ '/js/animation/coroutines/coroutines-2-basic.js' | prepend: site.baseurl }}">
+</motion-canvas-player>
 
-This of course implies two things:
+The animation is not meant to be an exact representation of how coroutines work. It should only visualized how just very few threads are used to execute many coroutine blocks (represented by the colored bars), some of them even in parallel.<br/>
+Two things can be highlighted however, as they represent important facts about coroutines. Pay attention to the orange coroutine block which "grows" after being only briefly touched by a thread. This is meant to represent how a coroutine can be **suspended** (offloaded from its thread), while waiting for a blocking task. Once the task is completed, the coroutine is picked up by any available thread. In the animation, it was started on `worker-2` but later picked up by `worker-1`.<br/>
+The other  important fact can be seen once `worker-1` executes the light-gray coroutine in line 2. This coroutine actually requires some computation so the thread is busy for a while. Our "code" is implemented in a way that this coroutine is not executed on the main thread but on one of the worker threads to achieve **asynchronicity**.
+
+With that, we have already learned two important things about Kotlin Coroutines:
 - Coroutines are not magic! 100,000 execution tasks cannot be performed any faster than without coroutines. That is still limited by the computation power of your CPU.
-- 100,000 parallel, mainly blocking operations can easily be handled by coroutines without taking any care of how threading and scheduling is handled.
+- 100,000 parallel, mainly blocking operations can easily be handled by coroutines without taking any care of how threading and scheduling is handled. The Kotlin compiler takes care of splitting them into chunks and enqueuing the work (*you do remember that from [earlier](#handing-work-over-to-threads), right?*).
 
 ### Where does this leave us?
 
 And with that we are already at the conclusion for this post. Coroutines are first and foremost a **clever trick of the Kotlin compiler**. It cuts suspendable code into small chunks and takes care of handing those chucks over to available threads and offloading them when possible. And of course they also provide a very clean and easy syntax at the same time.
 
-In the upcoming posts, we will cover how parallel compute and suspendable, blocking operations are handled by Kotlin, how you can leverage that in your own project and explain some of the more complicated situations and syntax oddities.
+In the upcoming posts, we will cover how parallel compute and suspendable, blocking operations are handled by Kotlin Coroutines, how you can leverage that in your own project and we will explore some of the more complicated situations and syntax oddities.
 
 The very **next post** will be about using coroutines for parallel compute. It should be published within a week.
 
 
-## structure
-
-- What coroutines are, how they work
-- parallel compute
-- suspending blocking operations
-- suspend vs scope vs context
-- when to use which dispatcher -> how to create more threads
-- channels
-- suspend your own code
-- integrate into you own future implementation
-
-## Knowledge
-
-- coroutines can be launched from within a coroutine scope
-- outer most scope is either global scope, runBlocking or something provided by framework (android, spring, micronaut)
-- pass scope to other function -> 
-  - `fun name() = coroutineScope { ... }`
-  - `launch(coroutineScope) { ... }`
-- suspend functions can be suspended
-  - not every scoped function needs to be suspendable
-- launch {} and async {} always use default dispatcher (defined by framework)
-- only switch if necessary
-  - main for UI stuff
-  - IO for blocking stuff
-- blocking function needs to be suspendable
-- rule of thumb
-  - suspendable chain for code that has blocking operations or async compute
-    -> wrap on outer scope
-  - non-suspendable for everything else
-
-
-- IO dispatcher: only if the code is not already non blocking
-  -> main -> io -> netty event loop makes no sense
-  -> main -> io -> direkt, blocking file access makes sense
+<script src="{{ '/js/motion-canvas-player.js' | prepend: site.baseurl }}" type="text/javascript"></script>
