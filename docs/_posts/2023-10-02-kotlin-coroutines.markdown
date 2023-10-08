@@ -63,6 +63,8 @@ log.info("Completed.")
 
 It took just over 100 milliseconds to create all 100,000 coroutines. Then they all waited around for a second (very fancy way of simulating blocking operations, I know) before being automatically disposed.
 
+You can find the full source code for this example on [GitHub](https://github.com/StefanKreidel/blog-example-projects/blob/posts/coroutines/1-basics/kotlin-coroutines/src/main/kotlin/Efficiency.kt).
+
 ### The Power of clever Code
 
 In the most basic terms, **coroutines have nothing to do with threads**. They are no alternative to threads nor a different implementation (on JVM level). They are just a **different way of working *with* threads**.
@@ -83,13 +85,17 @@ With that, we have already learned two important things about Kotlin Coroutines:
 - Coroutines are not magic! 100,000 execution tasks cannot be performed any faster than without coroutines. That is still limited by the computation power of your CPU.
 - 100,000 parallel, mainly blocking operations can easily be handled by coroutines without taking any care of how threading and scheduling is handled. The Kotlin compiler takes care of splitting them into chunks and enqueuing the work (*you do remember that from [earlier](#handing-work-over-to-threads), right?*).
 
-### Where does this leave us?
+## 3. Where does this leave us?
 
 And with that we are already at the conclusion for this post. Coroutines are first and foremost a **clever trick of the Kotlin compiler**. It cuts suspendable code into small chunks and takes care of handing those chucks over to available threads and offloading them when possible. And of course they also provide a very clean and easy syntax at the same time.
 
 In the upcoming posts, we will cover how parallel compute and suspendable, blocking operations are handled by Kotlin Coroutines, how you can leverage that in your own project and we will explore some of the more complicated situations and syntax oddities.
 
 The very **next post** will be about using coroutines for parallel compute. It should be published within a week.
+
+#### Wait, I want the Source Code
+
+Feel free to check it out on [GitHub](https://github.com/StefanKreidel/blog-example-projects/tree/main/kotlin-coroutines).
 
 
 <script src="{{ '/js/motion-canvas-player.js' | prepend: site.baseurl }}" type="text/javascript"></script>
