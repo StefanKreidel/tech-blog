@@ -16,6 +16,8 @@ import springWebfluxBoundedElastic from './scenes/spring-webflux/spring-webflux-
 
 import coroutinesThread from './scenes/coroutines/coroutines-1-create-thread?scene'
 import coroutinesBasic from './scenes/coroutines/coroutines-2-basic-coroutine?scene'
+import coroutinesAsyncReactive from './scenes/coroutines/coroutines-3-async-reactive?scene'
+import coroutinesAsyncConcurrent from './scenes/coroutines/coroutines-3-async-concurrent?scene'
 
 import './global.css';
 
@@ -34,6 +36,8 @@ export default makeProject({
     // springWebfluxWebClient,
     // springWebfluxBoundedElastic,
     // coroutinesThread,
-    coroutinesBasic
+    // coroutinesBasic,
+    // coroutinesAsyncReactive,
+    coroutinesAsyncConcurrent
   ]
 });

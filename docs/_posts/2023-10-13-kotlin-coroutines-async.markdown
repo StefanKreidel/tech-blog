@@ -25,13 +25,21 @@ Before diving in, let me quickly explain why concurrency, parallelism and non-bl
 
 Treating this situation as to not freeze the application is what is referred to as non-blocking. This means that it has nothing to do with speeding up the underlying process but rather preventing the application from needlessly waiting. Instead, it should be busy working on additional user input and only pick up that HTTP response or found file once it is returned. If non-blocking is implemented in a way that the code never waits but only reacts to completion events, the code is additionally *reactive*. The most common Kotlin way to achieve this is with *suspend* functions. We will cover that in the next post. In Java, one of the best known frameworks is [Project Reactor](https://projectreactor.io/docs) and its best known implementation, [Spring WebFlux](https://docs.spring.io/spring-framework/reference/web/webflux.html). I have already written a [detailed post]({{ site.baseurl }}{% post_url 2023-04-16-spring-webflux %}) about the latter.
 
-*TODO*: animation on non-blocking
+<motion-canvas-player 
+    src="{{ '/js/animation/coroutines/coroutines-3-async-reactive.js' | prepend: site.baseurl }}" >
+</motion-canvas-player>
+
+Even though there are no performance improvements as compared to a blocking implementation, the important difference is that the thread is not blocked while waiting. In a multi-user workload, other requests could be processed by the same thread in parallel, thus increasing throughput and scaling potential.
 
 **Parallelism** on the other hand refers to doing multiple things at once. This would of course also be the case if on piece of code is waiting, while another is executed in parallel. But if non-blocking is a thing, you can imagine that parallel-waiting is not an optimal solution. And in fact, it has a big overhead because we would still be blocking an expensive, native JMV thread. It just would not also freeze the application at the same time.
 
 So if this situation should be implemented with non-blocking mechanisms, executing multiple pieces of code at the same time finally explains what **concurrency** is. Examples would be to process multiple user requests at the same time or to split the complex mutation of a long collection into multiple smaller chunks and processing them in parallel.
 
-*TODO*: animation on concurrency
+<motion-canvas-player 
+    src="{{ '/js/animation/coroutines/coroutines-3-async-concurrent.js' | prepend: site.baseurl }}" >
+</motion-canvas-player>
+
+The difference now is that both functions are defined to be executed concurrently. As soon as the main thread reaches the point where the two functions are called, the execution is dispatched to worker threads. This speeds up execution in multi-threaded systems.
 
 As these mechanisms differ rather drastically, they are also implemented in a different way by Kotlin Coroutines. We will now explore, how parallelism is achieved.
 
@@ -144,8 +152,6 @@ If we want to execute code in parallel, this does not really help us. One thread
 ```java
 async(Dispatchers.Default) { fibonacci(1_000_000_000) }
 ```
-
-*TODO*: animation
 
 The `Default` dispatcher is intended for async computation. This dispatcher is backed by a pool of worker threads. By [default](https://github.com/Kotlin/kotlinx.coroutines/blob/master/kotlinx-coroutines-core/jvm/src/scheduling/Dispatcher.kt), coroutines create as many [worker threads](https://github.com/Kotlin/kotlinx.coroutines/blob/2a580dfda516dff197c400669cceebc78bfb647a/kotlinx-coroutines-core/jvm/src/scheduling/Tasks.kt#L33-L37) as there are logical processors (but at least two). If needed, you can override this with the `kotlinx.coroutines.scheduler.core.pool.size` system property. This is however not recommended. It will not speed up your work anymore, because an n-core CPU can already be saturated with n threads.
 
