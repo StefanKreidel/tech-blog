@@ -91,7 +91,7 @@ And with that we are already at the conclusion for this post. Coroutines are fir
 
 In the upcoming posts, we will cover how parallel compute and suspendable, blocking operations are handled by Kotlin Coroutines, how you can leverage that in your own project and we will explore some of the more complicated situations and syntax oddities.
 
-The very **next post** will be about using coroutines for parallel compute. It should be published within a week.
+The very **next post** will be about using coroutines for parallel compute. It is now already [released]({{ site.baseurl }}{% post_url 2023-10-13-kotlin-coroutines-async %}).
 
 #### Wait, I want the Source Code
 
