@@ -4,7 +4,7 @@ title: "Using Kotlin Coroutines for Parallel and Concurrent Compute"
 description: "Besides implementing non-blocking applications, Kotlin Coroutines can also easily be used for parallel or concurrent compute of code. This post not only explains how it can be done, but also how it is implemented on JVM level."
 date: 2023-10-02 14:30:00 +0100
 author: stefan
-image: 'https://i.imgur.com/tTknCXP.jpg'
+image: 'https://i.imgur.com/wSP5nzb.png'
 featured: true
 tags: [Kotlin, Coroutines]
 tags_color: '#f07010'
