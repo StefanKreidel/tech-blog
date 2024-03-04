@@ -4,7 +4,7 @@ name: Stefan Kreidel
 image: 'https://i.imgur.com/toRzKMAm.jpg'
 cover:
 location: Germany
-website: https://github.com/StefanKreidel
+website: https://stefankreidel.io
 github: https://github.com/StefanKreidel
 linkedin: https://www.linkedin.com/in/stefan-kreidel-838b87169/
 email: mailto:info@stefankreidel.io

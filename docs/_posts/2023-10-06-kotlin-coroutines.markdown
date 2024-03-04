@@ -5,7 +5,7 @@ description: "You oftern hear that 'Coroutines are like Threads but also differe
 date: 2023-10-02 14:30:00 +0100
 author: stefan
 image: 'https://i.imgur.com/tTknCXP.jpg'
-featured: true
+featured: false
 tags: [Kotlin, Coroutines]
 tags_color: '#f07010'
 ---
