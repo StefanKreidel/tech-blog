@@ -5,7 +5,7 @@ description: "Spring's new WebClient is part of WebFlux / reactive Spring. But i
 date:   2023-04-04 20:29:35 +0100
 author: stefan
 image:  'https://i.imgur.com/l2QPLfV.jpg'
-featured: true
+featured: false
 tags:   [Spring, WebMVC]
 tags_color: '#5caa22'
 ---

@@ -5,7 +5,7 @@ description: "You oftern hear that 'Coroutines are like Threads but also differe
 date: 2023-10-02 14:30:00 +0100
 author: stefan
 image: 'https://i.imgur.com/tTknCXP.jpg'
-featured: true
+featured: false
 tags: [Kotlin, Coroutines]
 tags_color: '#f07010'
 ---
@@ -95,7 +95,7 @@ The very **next post** will be about using coroutines for parallel compute. It i
 
 #### Wait, I want the Source Code
 
-Feel free to check it out on [GitHub](https://github.com/StefanKreidel/blog-example-projects/tree/main/kotlin-coroutines).
+Feel free to check it out on [GitHub](https://github.com/StefanKreidel/blog-example-projects/tree/main/kotlin-coroutines/src/main/kotlin/basics).
 
 
 <script src="{{ '/js/motion-canvas-player.js' | prepend: site.baseurl }}" type="text/javascript"></script>

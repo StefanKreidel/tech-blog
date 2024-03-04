@@ -3,7 +3,7 @@ layout: page
 title: About Me and this Blog
 permalink: /about/
 image: 'https://i.imgur.com/7Z7j1uW.jpg'
-website: https://github.com/StefanKreidel
+website: https://stefankreidel.io
 github: https://github.com/StefanKreidel
 linkedin: https://www.linkedin.com/in/stefan-kreidel-838b87169/
 email: mailto:info@stefankreidel.io
@@ -11,7 +11,7 @@ email: mailto:info@stefankreidel.io
 
 My name is Stefan Kreidel and I am a Software Engineer and Architect located im Germany. Even though I still live in the city I was born in, I enjoy visiting new places (preferably far away) whenever I find the time and, let's be real, money for it.
 
-I am a full-time engineer with lots of different interests outside of my typical backend domain, like operations, automation, SEO, frontend performance and, as of recently, blogging.
+I am a full-time engineer with lots of different interests outside of my typical backend domain, like architecture, operations, automation, SEO, performance and, as of recently, blogging.
 
 After working as a backend engineer at Mercedes for a couple of years, I got more and more invested in cross-team software design and architecture back in early 2022. After investing some of my spare work-time into this topic, I decided to take it up more seriously by taking over a position as system architect and, more or less at the same time, co-founding a department wide software architecture circle.
 

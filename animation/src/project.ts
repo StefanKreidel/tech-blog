@@ -18,6 +18,7 @@ import coroutinesThread from './scenes/coroutines/coroutines-1-create-thread?sce
 import coroutinesBasic from './scenes/coroutines/coroutines-2-basic-coroutine?scene'
 import coroutinesAsyncReactive from './scenes/coroutines/coroutines-3-async-reactive?scene'
 import coroutinesAsyncConcurrent from './scenes/coroutines/coroutines-3-async-concurrent?scene'
+import coroutinesReactiveEvents from './scenes/coroutines/coroutines-4-reactive-events?scene'
 
 import './global.css';
 
@@ -38,6 +39,7 @@ export default makeProject({
     // coroutinesThread,
     // coroutinesBasic,
     // coroutinesAsyncReactive,
-    coroutinesAsyncConcurrent
+    // coroutinesAsyncConcurrent,
+    coroutinesReactiveEvents
   ]
 });

@@ -5,7 +5,7 @@ description: "An introduction to how Java threads are used to implement Spring S
 date:   2023-03-19 13:30:35 +0100
 author: stefan
 image:  'https://i.imgur.com/N1XPmMN.jpg'
-featured: true
+featured: false
 tags:   [Spring, WebMVC]
 tags_color: '#5caa22'
 ---
