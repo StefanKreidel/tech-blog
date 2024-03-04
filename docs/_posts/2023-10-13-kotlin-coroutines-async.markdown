@@ -247,12 +247,12 @@ An example would be to read from an input stream and store each event in a datab
 
 In this post we have discussed how Kotlin Coroutines can easily be used for parallel and concurrent execution. We also discoverd what the difference between those are and how to limit parallelism as well as concurrency. We finally briefly touched flows and explained, why they are not intended for any kind of parallelism.
 
-The **next post** will be on suspending coroutines. It should land within the next two weeks.
+The **next post** will be on suspending coroutines. It has already been [released]({{ site.baseurl }}{% post_url 2023-11-24-kotlin-coroutines-suspend %}).
 
 
 #### Wait, I want the Source Code!
 
-Feel free to check it out on [GitHub](https://github.com/StefanKreidel/blog-example-projects/tree/main/kotlin-coroutines).
+Feel free to check it out on [GitHub](https://github.com/StefanKreidel/blog-example-projects/tree/main/kotlin-coroutines/src/main/kotlin/parallel).
 
 
 

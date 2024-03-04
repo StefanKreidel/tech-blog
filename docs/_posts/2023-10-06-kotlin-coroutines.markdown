@@ -95,7 +95,7 @@ The very **next post** will be about using coroutines for parallel compute. It i
 
 #### Wait, I want the Source Code
 
-Feel free to check it out on [GitHub](https://github.com/StefanKreidel/blog-example-projects/tree/main/kotlin-coroutines).
+Feel free to check it out on [GitHub](https://github.com/StefanKreidel/blog-example-projects/tree/main/kotlin-coroutines/src/main/kotlin/basics).
 
 
 <script src="{{ '/js/motion-canvas-player.js' | prepend: site.baseurl }}" type="text/javascript"></script>
